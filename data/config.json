@@ -1,0 +1,25 @@
+{
+    "time": {
+        "timezone":     "UTC"
+    },
+    "wifi": {
+        "ssid":         "MyWifi",
+        "password":     "MyWifiPassword"
+    },
+    "network": {
+        "dhcp":         "yes",
+        "ip":           "0.0.0.0",
+        "subnet":       "0.0.0.0",
+        "gateway":      "0.0.0.0",
+        "dns1":         "0.0.0.0",
+        "dns2":         "0.0.0.0"
+    },
+    "mdns": {
+        "hostname":     "esp32-ntp",
+        "description":  "ESP32 NTP Server"
+    },
+    "gps": {
+        "i2c_sda_pin":  21,
+        "i2c_scl_pin":  22
+    }
+}
