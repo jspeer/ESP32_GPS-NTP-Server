@@ -15,6 +15,7 @@
               IoT_16x16_icon_set_oled_2_color from engsta.net (no copyright noted)
 
  Config:      Configuration is stored in /data/config.json
+ 
               After first build and after every change of config.json, run "Build Filesystem
               Image" then run "Upload Filesystem Image".
 
