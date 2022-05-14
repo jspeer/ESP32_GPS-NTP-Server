@@ -1,8 +1,8 @@
 #include "ublox_m9n_i2c_module.h"
 
 // Set up i2c wires
-UBLOX_M9N::UBLOX_M9N() {
-    Wire.setPins(UBLOX_I2C_SDA_GPIO_PIN, UBLOX_I2C_SCL_GPIO_PIN);
+UBLOX_M9N::UBLOX_M9N(int sda, int scl) {
+    Wire.setPins(sda, scl);
     Wire.begin();
 }
 

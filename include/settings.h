@@ -31,10 +31,10 @@ typedef struct App_Settings {
         uint16_t port = 123;
     } mDNS_Settings_t;
 
-    // typedef struct GPS_Settings {
-    //     uint16_t sda_pin = 21;
-    //     uint16_t scl_pin = 22;
-    // } GPS_Settings_t;
+    typedef struct GPS_Settings {
+        uint16_t sda_pin = 21;
+        uint16_t scl_pin = 22;
+    } GPS_Settings_t;
     // End of sub-structs
 
     // Main structure for App Settings
@@ -42,7 +42,7 @@ typedef struct App_Settings {
     WiFi_Settings wifiSettings;
     Network_Settings networkSettings;
     mDNS_Settings mDNSSettings;
-    // GPS_Settings gpsSettings;
+    GPS_Settings gpsSettings;
 } App_Settings_t;
 
 App_Settings LoadAppSettings(const char* inifile);

@@ -46,8 +46,8 @@ App_Settings LoadAppSettings(const char* inifile) {
                 if (jsonConfig["mdns"]["description"]) appSettings.mDNSSettings.host_description = jsonConfig["mdns"]["description"];
 
                 // GPS GPIO settings
-                // if (jsonConfig["gps"]["i2c_sda_pin"]) appSettings.gpsSettings.sda_pin = jsonConfig["gps"]["i2c_sda_pin"];
-                // if (jsonConfig["gps"]["i2c_scl_pin"]) appSettings.gpsSettings.scl_pin = jsonConfig["gps"]["i2c_scl_pin"];
+                if (jsonConfig["gps"]["i2c_sda_pin"]) appSettings.gpsSettings.sda_pin = jsonConfig["gps"]["i2c_sda_pin"];
+                if (jsonConfig["gps"]["i2c_scl_pin"]) appSettings.gpsSettings.scl_pin = jsonConfig["gps"]["i2c_scl_pin"];
             } else {
                 Serial.println("Failed to deserialize JSON.");
                 Serial.printf("%i: %s\n", err.code(), err.c_str());

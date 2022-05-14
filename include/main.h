@@ -25,7 +25,7 @@ WiFiUDP UDP;
 
 // Init u-Blox M9N
 #include "ublox_m9n_i2c_module.h"
-UBLOX_M9N* gps = new UBLOX_M9N;
+UBLOX_M9N* gps = new UBLOX_M9N(appSettings.gpsSettings.sda_pin, appSettings.gpsSettings.scl_pin);
 
 // Init TFT
 #include "ttgo_lcd.h"
