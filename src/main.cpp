@@ -49,8 +49,8 @@ void setup() {
             appSettings.networkSettings.dns1,
             appSettings.networkSettings.dns2
         ) == false) {
-                Serial.println("WiFi configuration failed.");
-                while(1) { ;; };
+                Serial.println("WiFi configuration failed. Shutting down.");
+                esp_deep_sleep_start();
         }
     }
     if (appSettings.wifiSettings.ssid == NULL) {
@@ -69,14 +69,18 @@ void setup() {
     String ipaddr = WiFi.localIP().toString();
     display->WriteIPAddr(&ipaddr);                                          // Draw IP address on display
 
-    if (start_mdns_services(appSettings.mDNSSettings.hostname, appSettings.mDNSSettings.host_description, "_ntp", "_udp", NTP_PORT)) { // Start mDNS service
-        Serial.printf("mDNS Started with hostname: %s.\n", appSettings.mDNSSettings.hostname);
-    } else {
-        Serial.println("mDNS failed to start.");
-    }
+    // Start the wifi watchdog task
+    WifiTaskArgs* wifiTaskArgs = new WifiTaskArgs {
+        .display = display,
+        .appSettings = appSettings
+    };
+    xTaskCreate(WifiWatchdog, "Reconnect to WiFi", 5000, wifiTaskArgs, 1, NULL);
+
+    // Start mDNS
+    start_mdns_services(appSettings.mDNSSettings.hostname, appSettings.mDNSSettings.host_description, appSettings.mDNSSettings.service_type, appSettings.mDNSSettings.proto, appSettings.mDNSSettings.port);
 
 /************************************************************************************
- * Start one shot timer which spawns the remainder of the timers and functions      *
+ * Start one shot hw timer which spawns the remainder of the timers and functions   *
  ************************************************************************************/
     Serial.println("Starting timers.");
     // Set up the arguments for StartTimers()
@@ -84,6 +88,7 @@ void setup() {
         .display = display,
         .gps = gps
     };
+
     // Create the timer arguments
     const esp_timer_create_args_t startTimersTimerArgs = {
         .callback   = &StartTimers,
@@ -102,44 +107,17 @@ void setup() {
 
     UDP.begin(NTP_PORT);                    // Start listening on the NTP/UDP port
 
+    Serial.println("Starting up NTP server.");
+    SendNTPReplyArgs* sendNTPReplyArgs = new SendNTPReplyArgs {
+        .UDP = &UDP,
+        .gps = gps
+    };
+    xTaskCreate(WaitForNTPPacket, "NTP Server", 5000, sendNTPReplyArgs, 1, NULL);
+
     Serial.printf("\nReady to receive requests on %s:%i/UDP.\n", ipaddr, NTP_PORT);
+
+    // Delete "setup and loop" tasks
+    vTaskDelete(NULL);
 }
 
-// Using loop() for NTP server // TODO: change the NTP packet portion to a task/function within the NTP_Server library
-void loop() {
-    if (WiFi.status() == WL_CONNECTED) {
-        // Is there a new packet waiting?
-        // I structured this in this way so I could use a timer task or something similar for SendNTPReply() with only minor changes to the function below
-        if (UDP.parsePacket()) {
-            SendNTPReplyArgs* sendNTPReplyArgs = new SendNTPReplyArgs {
-                .UDP = &UDP,
-                .gps = gps
-            };
-            SendNTPReply(sendNTPReplyArgs);
-        }
-    } else {
-        // Duplicate code from above
-        Serial.println("Stopping mDNS service.");
-        stop_mdns_services();
-        display->DrawWifiIcon(false);
-        Serial.print("Reconnecting to WiFi");
-        WiFi.reconnect();
-        while (WiFi.status() != WL_CONNECTED) {
-            Serial.print(".");
-            vTaskDelay(500 / portTICK_PERIOD_MS);
-        }
-        Serial.println("connected.");
-        display->DrawWifiIcon(true);
-        if (start_mdns_services(
-            appSettings.mDNSSettings.hostname,
-            appSettings.mDNSSettings.host_description,
-            appSettings.mDNSSettings.service_type,
-            appSettings.mDNSSettings.proto,
-            appSettings.mDNSSettings.port
-        )) {
-                Serial.printf("mDNS started with hostname: %s.\n", appSettings.mDNSSettings.hostname);
-        } else {
-            Serial.println("mDNS failed to start.");
-        }
-    }
-}
+void loop() { ;; }  // loop() never runs

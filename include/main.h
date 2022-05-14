@@ -10,11 +10,13 @@
 #include <time.h>
 
 // App Settings
+#include "version.h"
 #include "settings.h"
 App_Settings appSettings = LoadAppSettings("/config.json");
 
 // UDP
-#include <WiFi.h>
+// #include <WiFi.h>
+#include "wifi_handler.h"
 #include <WifiUDP.h>
 WiFiUDP UDP;
 
@@ -37,6 +39,5 @@ TTGO_Lcd* display = new TTGO_Lcd;
 
 // ============ GLOBAL VARIABLES ===================================================
 #define TITLE "GPS NTP"  // shown at top of display
-#define VERSION "1.1.0-dev"
 
 #endif  // _MAIN_H_

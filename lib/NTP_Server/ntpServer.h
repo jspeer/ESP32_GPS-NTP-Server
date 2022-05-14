@@ -44,6 +44,7 @@ typedef struct SendNTPReplyArgs {
     UBLOX_M9N* gps;
 } send_ntp_reply_t;
 
-void SendNTPReply(SendNTPReplyArgs* args);
+void WaitForNTPPacket(void* args);
+void SendNTPReply(void* args);
 
 #endif  // _NTP_SERVER_H_

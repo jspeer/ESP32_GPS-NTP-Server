@@ -2,8 +2,20 @@
 #include "ntpServer.h"
 #endif
 
-void SendNTPReply(SendNTPReplyArgs* sendNtpReplyArgs) {  // void* args) {
-    // SendNTPReplyArgs* sendNtpReplyArgs = static_cast<SendNTPReplyArgs*>(args);
+void WaitForNTPPacket(void* args) {
+    SendNTPReplyArgs* sendNTPReplyArgs = static_cast<SendNTPReplyArgs*>(args);
+
+    for (;;) {
+        if (sendNTPReplyArgs->UDP->parsePacket()) {
+            xTaskCreate(SendNTPReply, "Send NTP Reply", 5000, sendNTPReplyArgs, 1, NULL);
+        }
+
+        vTaskDelay(1 / portTICK_RATE_MS);  // Very short delay to give FreeRTOS watchdog timer a chance
+    }
+}
+
+void SendNTPReply(void* args) {
+    SendNTPReplyArgs* sendNtpReplyArgs = static_cast<SendNTPReplyArgs*>(args);
 
     // Set the timestamp for the RX packet
     timespec ts;
@@ -66,4 +78,7 @@ void SendNTPReply(SendNTPReplyArgs* sendNtpReplyArgs) {  // void* args) {
     sendNtpReplyArgs->UDP->beginPacket(remoteIP, remotePort);
     sendNtpReplyArgs->UDP->write((uint8_t*) &replyPacket, sizeof(replyPacket));
     sendNtpReplyArgs->UDP->endPacket();
+    
+    // Destroy the task
+    vTaskDelete(NULL);
 }

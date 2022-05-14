@@ -25,5 +25,3 @@
  TODO: Remove debugging output to serial.....eventually.
        Improve comments throughout to ensure reader understands what I wrote... including
        future me.
-       Move WiFi functions outside of setup() and loop()
-       Move waiting for NTP packet, then running SendNTPReply() outside of loop()
