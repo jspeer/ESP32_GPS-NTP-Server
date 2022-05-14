@@ -10,7 +10,7 @@
  Description: An ESP32 based NTP server with time synchronized by GPS
 
               M9N is connected via I2C via pins 13 (SDA) and 15 (SCL).
-              See lib/UBLOX_GPS/ublox_m9n_i2c_module.h (default is pins 21/22).
+              See /data/config.json (default is pins 21/22).
 
               IoT_16x16_icon_set_oled_2_color from engsta.net (no copyright noted)
 
