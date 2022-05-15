@@ -14,11 +14,8 @@
 #include "settings.h"
 App_Settings appSettings = LoadAppSettings("/config.json");
 
-// UDP
 // #include <WiFi.h>
 #include "wifi_handler.h"
-#include <WifiUDP.h>
-WiFiUDP UDP;
 
 // mDNS
 #include "mDNS_Server.h"
@@ -36,6 +33,7 @@ TTGO_Lcd* display = new TTGO_Lcd;
 
 // Include the NTP server
 #include "ntpServer.h"
+NTPServer ntpServer = NTPServer(gps);
 
 // ============ GLOBAL VARIABLES ===================================================
 #define TITLE "GPS NTP"  // shown at top of display

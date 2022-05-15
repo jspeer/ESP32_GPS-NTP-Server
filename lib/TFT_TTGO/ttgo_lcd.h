@@ -23,16 +23,6 @@ const int pwmResolution = 8;
 const int pwmLedChannelTFT = 0;
 
 class TTGO_Lcd {
-// Structs
-public:
-    struct DisplayString {
-        String Message;
-        uint32_t TextColor, BackgroundColor, X, Y = 0;
-        uint16_t TextPadding = 0;
-        uint8_t TextSize, TextFont, TextDatum, TextRotation = 0;
-        bool TextWrapX, TextWrapY = false;
-    };
-
 // Default methods
 public:
     TTGO_Lcd();
@@ -57,7 +47,9 @@ private:
     int borderColor = TFT_WHITE;
     int fillColor = TFT_BLUE;
     int fontColor = TFT_WHITE;
+    int fontTimeFg = TFT_CYAN;
     int fontColorInverse = TFT_BLACK;
+    int fontColorOk = TFT_GREEN;
     int fontColorWarn = TFT_YELLOW;
     int fontColorError = TFT_RED;
 

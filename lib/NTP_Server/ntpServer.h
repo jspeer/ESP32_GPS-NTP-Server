@@ -12,6 +12,35 @@
 #define NTP_PACKET_SIZE 48
 #define EPOCH_NTP64_OFFSET 2208988800   // Difference from NTP64 to EPOCH (Jan 1 1900 to Jan 1 1970)
 
+// Convert NTP server to OOP
+class NTPServer {
+// Default methods
+public:
+    NTPServer(UBLOX_M9N* gps);
+    ~NTPServer();
+
+// public members
+public:
+    WiFiUDP UDP;
+    timespec timestamp;
+    uint16_t port;
+    UBLOX_M9N* gps;
+
+// private members
+private:
+
+// public methods
+public:
+    static void SendNTPReply(void* args);
+    static void WaitForNTPPacket(void* args);
+    void StartUDPListener();
+    void StopUDPListener();
+
+// private methods
+private:
+    void GetRealtime();
+};
+
 typedef struct NTPPacket {
     uint8_t li_vn_mode;      // Eight bits. li, vn, and mode.
                             // li.   Two bits.   Leap indicator.
@@ -38,11 +67,6 @@ typedef struct NTPPacket {
     uint32_t txTm_s;         // 32 bits and the most important field the client cares about. Transmit time-stamp seconds.
     uint32_t txTm_f;         // 32 bits. Transmit time-stamp fraction of a second.
 } ntp_packet_t;              // Total: 384 bits or 48 bytes.
-
-typedef struct SendNTPReplyArgs {
-    WiFiUDP* UDP;
-    UBLOX_M9N* gps;
-} send_ntp_reply_t;
 
 void WaitForNTPPacket(void* args);
 void SendNTPReply(void* args);

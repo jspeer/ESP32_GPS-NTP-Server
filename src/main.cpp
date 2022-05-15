@@ -16,14 +16,14 @@ void setup() {
     Serial.printf("%s v%s starting up.\n", TITLE, VERSION);
 
     // Draw the base layer of the display
-    Serial.println("Initializing display.");
+    Serial.println("Initializing display.");  // display is defined in main.h
     display->init(1);                                                       // Initialize the display
     display->DrawBase(TITLE, VERSION);                                      // Draw the base display layer
     display->DrawWifiIcon(false);                                           // Draw WiFi icon on display
 
     // Initialize the GPS unit
     Serial.print("Initializing GPS.");
-    gps->init();
+    gps->init();  // gps is defined in main.h
     vTaskDelay(500 / portTICK_PERIOD_MS);                                   // Wait for GPS module to initialize
     while (gps->gnss_is_initialized == false) {
         Serial.print(".");
@@ -35,7 +35,7 @@ void setup() {
     Serial.println();
 
     // Set up Time Zone as defined in main.h
-    Serial.println("Setting up time zone.");
+    Serial.printf("Setting up time zone (%s).\n", appSettings.timezone);
     setenv("TZ", appSettings.timezone, 1); tzset();                         // This is the easiest way to ensure we can use a full TZ string
 
     // Start up the WiFi
@@ -80,7 +80,9 @@ void setup() {
     start_mdns_services(appSettings.mDNSSettings.hostname, appSettings.mDNSSettings.host_description, appSettings.mDNSSettings.service_type, appSettings.mDNSSettings.proto, appSettings.mDNSSettings.port);
 
 /************************************************************************************
- * Start one shot hw timer which spawns the remainder of the timers and functions   *
+ * Start one shot hw timer which spawns other hardware timers (see startTimers.h)   *
+ * Display updating and GPS reference time obtained using hardware timers           *
+ * Using hardware timers instead of FreeRTOS software timers here for simplicity    *
  ************************************************************************************/
     Serial.println("Starting timers.");
     // Set up the arguments for StartTimers()
@@ -105,18 +107,12 @@ void setup() {
     Serial.println("Obtaining first time stamp from GPS.");
     gps->saveEpochToRtc();
 
-    UDP.begin(NTP_PORT);                    // Start listening on the NTP/UDP port
-
     Serial.println("Starting up NTP server.");
-    SendNTPReplyArgs* sendNTPReplyArgs = new SendNTPReplyArgs {
-        .UDP = &UDP,
-        .gps = gps
-    };
-    xTaskCreate(WaitForNTPPacket, "NTP Server", 5000, sendNTPReplyArgs, 1, NULL);
-
-    Serial.printf("\nReady to receive requests on %s:%i/UDP.\n", ipaddr, NTP_PORT);
+    ntpServer.StartUDPListener();  // ntpServer is defined in main.h
+    xTaskCreate(NTPServer::WaitForNTPPacket, "NTP Server", 5000, &ntpServer, 1, NULL);
 
     // Delete "setup and loop" tasks
+    Serial.println("Terminating main thread, relying on spawned threads now.");
     vTaskDelete(NULL);
 }
 

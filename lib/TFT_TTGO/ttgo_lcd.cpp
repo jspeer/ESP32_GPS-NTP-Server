@@ -33,7 +33,7 @@ void TTGO_Lcd::wake() {
 }
 
 void TTGO_Lcd::clearScreen() {
-    display->fillScreen(TFT_BLACK);
+    display->fillScreen(bgColor);
 }
 
 void TTGO_Lcd::DrawBase(char* title, char* version) {
@@ -44,10 +44,10 @@ void TTGO_Lcd::DrawBase(char* title, char* version) {
     DrawFooterBar();
     display->drawRoundRect(borderWidth, borderWidth, sizeX, sizeY, radiusSize, borderColor);
 
-    display->setTextColor(TFT_CYAN, TFT_BLACK);
+    display->setTextColor(fontTimeFg, bgColor);
     display->drawString("00:00:00", 12, 30, 6);
 
-    display->setTextColor(TFT_GREEN, TFT_BLACK);
+    display->setTextColor(fontColorOk, bgColor);
     display->drawString(_tzname[_daylight], 206, 29, 2);
 
     WriteVersion(version);
@@ -73,11 +73,11 @@ void TTGO_Lcd::DrawWifiIcon(bool connected) {
     if (connected) {
         posY = 6;
         display->drawRect(posX, posY-2, sizeX, sizeY, fillColor);
-        display->drawBitmap(posX, posY, wifi1_icon16x16, sizeX, sizeY, TFT_GREEN, fillColor);
+        display->drawBitmap(posX, posY, wifi1_icon16x16, sizeX, sizeY, fontColorOk, fillColor);
     } else {
         posY = 4;
         display->drawRect(posX, posY+2, sizeX, sizeY, fillColor);
-        display->drawBitmap(posX, posY, nocon_icon16x16, sizeX, sizeY, TFT_RED, fillColor);
+        display->drawBitmap(posX, posY, nocon_icon16x16, sizeX, sizeY, fontColorError, fillColor);
         String ipaddr = "No IP Address";
         WriteIPAddr(&ipaddr);
     }
@@ -89,7 +89,7 @@ void TTGO_Lcd::DrawNoSyncIcon() {
     int sizeX = 16;
     int sizeY = 16;
     display->drawRect(posX, posY+2, sizeX, sizeY, fillColor);
-    display->drawBitmap(posX, posY, nocon_icon16x16, sizeX, sizeY, TFT_RED, fillColor);
+    display->drawBitmap(posX, posY, nocon_icon16x16, sizeX, sizeY, fontColorError, fillColor);
 }
 
 void TTGO_Lcd::DrawSyncInProgressIcon() {
@@ -98,7 +98,7 @@ void TTGO_Lcd::DrawSyncInProgressIcon() {
     int sizeX = 16;
     int sizeY = 16;
     display->drawRect(posX, posY+2, sizeX, sizeY, fillColor);
-    display->drawBitmap(posX, posY, warning_icon16x16, sizeX, sizeY, TFT_YELLOW, fillColor);
+    display->drawBitmap(posX, posY, warning_icon16x16, sizeX, sizeY, fontColorWarn, fillColor);
 }
 
 void TTGO_Lcd::DrawSyncIcon(int level) {
@@ -112,17 +112,17 @@ void TTGO_Lcd::DrawSyncIcon(int level) {
             DrawSyncInProgressIcon();
             break;
         case 1:
-            display->drawBitmap(posX, posY, signal1_icon16x16, sizeX, sizeY, TFT_GREEN, fillColor);;
+            display->drawBitmap(posX, posY, signal1_icon16x16, sizeX, sizeY, fontColorOk, fillColor);;
             break;
         case 2:
-            display->drawBitmap(posX, posY, signal2_icon16x16, sizeX, sizeY, TFT_GREEN, fillColor);;
+            display->drawBitmap(posX, posY, signal2_icon16x16, sizeX, sizeY, fontColorOk, fillColor);;
             break;
         case 3:
-            display->drawBitmap(posX, posY, signal3_icon16x16, sizeX, sizeY, TFT_YELLOW, fillColor);;
+            display->drawBitmap(posX, posY, signal3_icon16x16, sizeX, sizeY, fontColorWarn, fillColor);;
             break;
         case 4:
         default:
-            display->drawBitmap(posX, posY, signal4_icon16x16, sizeX, sizeY, TFT_YELLOW, fillColor);;
+            display->drawBitmap(posX, posY, signal4_icon16x16, sizeX, sizeY, fontColorWarn, fillColor);;
             break;
     }
 }
@@ -154,18 +154,18 @@ void TTGO_Lcd::DisplayTime(tm* timeinfo) {
     char buffer[80];
 
     strftime(buffer, 80, "%T", timeinfo);
-    display->setTextColor(TFT_CYAN, TFT_BLACK);
+    display->setTextColor(fontColorWarn, bgColor);
     display->drawString(buffer, 12, 30, 6);
 
     // If the day of the year has changed, update the date string
     if (dayOfTheYear != timeinfo->tm_yday) {
         dayOfTheYear = timeinfo->tm_yday;
         strftime(buffer, 80, "%a %b %e, %Y", timeinfo);
-        display->setTextColor(TFT_YELLOW, TFT_BLACK);
-        display->drawRect(borderWidth+1, 80, screenX - (borderWidth*2) - 2, display->fontHeight(4), TFT_BLACK);
+        display->setTextColor(fontColorWarn, bgColor);
+        display->drawRect(borderWidth+1, 80, screenX - (borderWidth*2) - 2, display->fontHeight(4), bgColor);
         display->drawCentreString(buffer, ((screenX - (borderWidth*2))/2), 80, 4);
     }
 
-    display->setTextColor(TFT_GREEN, TFT_BLACK);
+    display->setTextColor(fontColorOk, bgColor);
     display->drawString(_tzname[_daylight], 206, 29, 2);
 }
