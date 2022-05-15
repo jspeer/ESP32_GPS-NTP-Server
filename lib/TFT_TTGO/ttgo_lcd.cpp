@@ -36,12 +36,12 @@ void TTGO_Lcd::clearScreen() {
     display->fillScreen(bgColor);
 }
 
-void TTGO_Lcd::DrawBase(char* title, char* version) {
+void TTGO_Lcd::drawBase(char* title, char* version) {
     int sizeX = screenX - (borderWidth*2);
     int sizeY = screenY - (borderWidth*2);
     display->fillScreen(bgColor);
-    DrawTitlebar(title);
-    DrawFooterBar();
+    drawTitlebar(title);
+    drawFooterBar();
     display->drawRoundRect(borderWidth, borderWidth, sizeX, sizeY, radiusSize, borderColor);
 
     display->setTextColor(fontTimeFg, bgColor);
@@ -50,22 +50,22 @@ void TTGO_Lcd::DrawBase(char* title, char* version) {
     display->setTextColor(fontColorOk, bgColor);
     display->drawString(_tzname[_daylight], 206, 29, 2);
 
-    WriteVersion(version);
+    writeVersion(version);
 }
 
-void TTGO_Lcd::DrawTitlebar(char* title) {
+void TTGO_Lcd::drawTitlebar(char* title) {
     int sizeX = screenX - (borderWidth*2);
     display->fillRoundRect(borderWidth, borderWidth, sizeX, 20, radiusSize, fillColor);
     display->setTextColor(fontColorWarn, fillColor);
     display->drawCentreString(title, screenX / 2, 5, fontSizeNormal);
 }
 
-void TTGO_Lcd::DrawFooterBar() {
+void TTGO_Lcd::drawFooterBar() {
     int sizeX = screenX - (borderWidth*2);
     display->fillRoundRect(borderWidth, screenY - borderWidth - 20, sizeX, 20, radiusSize, fillColor);
 }
 
-void TTGO_Lcd::DrawWifiIcon(bool connected) {
+void TTGO_Lcd::drawWifiIcon(bool connected) {
     int posX = screenX - 22;
     int posY;
     int sizeX = 16;
@@ -79,11 +79,11 @@ void TTGO_Lcd::DrawWifiIcon(bool connected) {
         display->drawRect(posX, posY+2, sizeX, sizeY, fillColor);
         display->drawBitmap(posX, posY, nocon_icon16x16, sizeX, sizeY, fontColorError, fillColor);
         String ipaddr = "No IP Address";
-        WriteIPAddr(&ipaddr);
+        writeIPAddr(&ipaddr);
     }
 }
 
-void TTGO_Lcd::DrawNoSyncIcon() {
+void TTGO_Lcd::drawNoSyncIcon() {
     int posX = 6;
     int posY = 4;
     int sizeX = 16;
@@ -92,7 +92,7 @@ void TTGO_Lcd::DrawNoSyncIcon() {
     display->drawBitmap(posX, posY, nocon_icon16x16, sizeX, sizeY, fontColorError, fillColor);
 }
 
-void TTGO_Lcd::DrawSyncInProgressIcon() {
+void TTGO_Lcd::drawSyncInProgressIcon() {
     int posX = 6;
     int posY = 4;
     int sizeX = 16;
@@ -101,7 +101,7 @@ void TTGO_Lcd::DrawSyncInProgressIcon() {
     display->drawBitmap(posX, posY, warning_icon16x16, sizeX, sizeY, fontColorWarn, fillColor);
 }
 
-void TTGO_Lcd::DrawSyncIcon(int level) {
+void TTGO_Lcd::drawSyncIcon(int level) {
     int posX = 6;
     int posY = 4;
     int sizeX = 16;
@@ -109,7 +109,7 @@ void TTGO_Lcd::DrawSyncIcon(int level) {
     display->drawRect(posX, posY+2, sizeX, sizeY, fillColor);
     switch (level) {
         case 0:
-            DrawSyncInProgressIcon();
+            drawSyncInProgressIcon();
             break;
         case 1:
             display->drawBitmap(posX, posY, signal1_icon16x16, sizeX, sizeY, fontColorOk, fillColor);;
@@ -127,7 +127,7 @@ void TTGO_Lcd::DrawSyncIcon(int level) {
     }
 }
 
-void TTGO_Lcd::WriteIPAddr(String* ipaddr) {
+void TTGO_Lcd::writeIPAddr(String* ipaddr) {
     int zeroY = screenY - borderWidth - 20;
     int zeroX = screenX - borderWidth;
     int posX = zeroX - 7;
@@ -138,7 +138,7 @@ void TTGO_Lcd::WriteIPAddr(String* ipaddr) {
     display->drawRightString(ipaddr->c_str(), posX, posY, fontSizeNormal);
 }
 
-void TTGO_Lcd::WriteVersion(char* version) {
+void TTGO_Lcd::writeVersion(char* version) {
     int zeroY = screenY - borderWidth - 20;
     int zeroX = 0 + borderWidth;
     int posX = zeroX + 7;
@@ -150,7 +150,7 @@ void TTGO_Lcd::WriteVersion(char* version) {
     display->drawString(versionString, posX, posY, fontSizeNormal);
 }
 
-void TTGO_Lcd::DisplayTime(tm* timeinfo) {
+void TTGO_Lcd::displayTime(tm* timeinfo) {
     char buffer[80];
 
     strftime(buffer, 80, "%T", timeinfo);

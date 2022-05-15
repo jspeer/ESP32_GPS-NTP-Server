@@ -31,10 +31,10 @@ private:
 
 // public methods
 public:
-    static void SendNTPReply(void* args);
-    static void WaitForNTPPacket(void* args);
-    void StartUDPListener();
-    void StopUDPListener();
+    static void sendNTPReply(void* args);
+    static void waitForNTPPacket(void* args);
+    void startUDPListener();
+    void stopUDPListener();
 
 // private methods
 private:

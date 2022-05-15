@@ -12,7 +12,8 @@ typedef struct WifiTaskArgs {
     App_Settings appSettings;
 } WifiTaskArgs_t;
 
-void WifiWatchdog(void* args);
-void WifiReconnectTask(void* args);
+void startWifi(App_Settings* appSettings, TTGO_Lcd* display);
+void wifiWatchdog(void* args);
+void wifiReconnectTask(void* args);
 
 #endif  // _WIFI_HANDLER_H_

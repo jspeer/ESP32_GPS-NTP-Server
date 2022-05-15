@@ -66,22 +66,22 @@ public:
     void sleep();
     void wake();
     void clearScreen();
-    void DrawBase(char* title, char* version);
-    void WriteIPAddr(String* ipaddr);
+    void drawBase(char* title, char* version);
+    void writeIPAddr(String* ipaddr);
 
 // Private methods
 private:
-    void DrawTitlebar(char* title);
-    void DrawFooterBar();
-    void WriteVersion(char* version);
+    void drawTitlebar(char* title);
+    void drawFooterBar();
+    void writeVersion(char* version);
 
 // Drawing Icons
 public:
-    void DrawWifiIcon(bool connected);
-    void DrawSyncInProgressIcon();
-    void DrawSyncIcon(int level);
-    void DisplayTime(tm* timeinfo);
-    void DrawNoSyncIcon();
+    void drawWifiIcon(bool connected);
+    void drawSyncInProgressIcon();
+    void drawSyncIcon(int level);
+    void displayTime(tm* timeinfo);
+    void drawNoSyncIcon();
 
 private:
 };

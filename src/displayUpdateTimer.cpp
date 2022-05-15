@@ -10,5 +10,5 @@ void DisplayUpdateTimeDate(void* args) {
     time(&now);
     localtime_r(&now, &timeinfo);
 
-    displayUpdateArgs->display->DisplayTime(&timeinfo);
+    displayUpdateArgs->display->displayTime(&timeinfo);
 }

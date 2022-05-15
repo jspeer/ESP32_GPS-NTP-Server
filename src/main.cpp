@@ -18,8 +18,8 @@ void setup() {
     // Draw the base layer of the display
     Serial.println("Initializing display.");  // display is defined in main.h
     display->init(1);                                                       // Initialize the display
-    display->DrawBase(TITLE, VERSION);                                      // Draw the base display layer
-    display->DrawWifiIcon(false);                                           // Draw WiFi icon on display
+    display->drawBase(TITLE, VERSION);                                      // Draw the base display layer
+    display->drawWifiIcon(false);                                           // Draw WiFi icon on display
 
     // Initialize the GPS unit
     Serial.print("Initializing GPS.");
@@ -27,11 +27,11 @@ void setup() {
     vTaskDelay(500 / portTICK_PERIOD_MS);                                   // Wait for GPS module to initialize
     while (gps->gnss_is_initialized == false) {
         Serial.print(".");
-        display->DrawNoSyncIcon();
+        display->drawNoSyncIcon();
         gps->init();                                                        // Retry GPS init()
         vTaskDelay(500 / portTICK_PERIOD_MS);
     }
-    display->DrawSyncInProgressIcon();                                      // Draw sync icon on display
+    display->drawSyncInProgressIcon();                                      // Draw sync icon on display
     Serial.println();
 
     // Set up Time Zone as defined in main.h
@@ -40,44 +40,10 @@ void setup() {
 
     // Start up the WiFi
     Serial.println("Initializing and configuring WiFi.");
-    WiFi.mode(WIFI_STA);                                                    // Set the wifi to station mode
-    if (!appSettings.networkSettings.dhcp) {
-        if (WiFi.config(
-            appSettings.networkSettings.staticIP,
-            appSettings.networkSettings.gateway,
-            appSettings.networkSettings.subnet,
-            appSettings.networkSettings.dns1,
-            appSettings.networkSettings.dns2
-        ) == false) {
-                Serial.println("WiFi configuration failed. Shutting down.");
-                esp_deep_sleep_start();
-        }
-    }
-    if (appSettings.wifiSettings.ssid == NULL) {
-        Serial.println("No SSID set in config.json. Shutting down.");
-        esp_deep_sleep_start();
-    }
-
-    Serial.printf("Connecting to %s", appSettings.wifiSettings.ssid);
-    WiFi.begin(appSettings.wifiSettings.ssid, appSettings.wifiSettings.password); // Tell wifi to start connecting
-    while (WiFi.status() != WL_CONNECTED) {                                 // Wait for connection
-        Serial.print(".");
-        vTaskDelay(500 / portTICK_PERIOD_MS);
-    }
-    Serial.println("connected.");
-    display->DrawWifiIcon(true);                                            // Draw wifi icon on display
-    String ipaddr = WiFi.localIP().toString();
-    display->WriteIPAddr(&ipaddr);                                          // Draw IP address on display
-
-    // Start the wifi watchdog task
-    WifiTaskArgs* wifiTaskArgs = new WifiTaskArgs {
-        .display = display,
-        .appSettings = appSettings
-    };
-    xTaskCreate(WifiWatchdog, "Reconnect to WiFi", 5000, wifiTaskArgs, 1, NULL);
+    startWifi(&appSettings, display);
 
     // Start mDNS
-    start_mdns_services(appSettings.mDNSSettings.hostname, appSettings.mDNSSettings.host_description, appSettings.mDNSSettings.service_type, appSettings.mDNSSettings.proto, appSettings.mDNSSettings.port);
+    startMdnsService(appSettings.mDNSSettings.hostname, appSettings.mDNSSettings.host_description, appSettings.mDNSSettings.service_type, appSettings.mDNSSettings.proto, appSettings.mDNSSettings.port);
 
 /************************************************************************************
  * Start one shot hw timer which spawns other hardware timers (see startTimers.h)   *
@@ -106,11 +72,11 @@ void setup() {
 
     Serial.println("Obtaining first time stamp from GPS.");
     gps->saveEpochToRtc();
-    display->DrawSyncIcon(gps->getSIV());
+    display->drawSyncIcon(gps->getSIV());
 
     Serial.println("Starting up NTP server.");
-    ntpServer.StartUDPListener();  // ntpServer is defined in main.h
-    xTaskCreate(NTPServer::WaitForNTPPacket, "NTP Server", 5000, &ntpServer, 1, NULL);
+    ntpServer.startUDPListener();  // ntpServer is defined in main.h
+    xTaskCreate(NTPServer::waitForNTPPacket, "NTP Server", 5000, &ntpServer, 1, NULL);
 
     // Delete "setup and loop" tasks
     Serial.println("Terminating main thread, relying on spawned threads now.");

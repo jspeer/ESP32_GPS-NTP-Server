@@ -1,6 +1,6 @@
 #include "mDNS_Server.h"
 
-bool start_mdns_services(const char* hostname, const char* host_description, const char* service_type, const char* proto, uint16_t port) {
+bool startMdnsService(const char* hostname, const char* host_description, const char* service_type, const char* proto, uint16_t port) {
     // Start mDNS service
     esp_err_t err = mdns_init();                                            // Initialize mDNS
     if (err) {
@@ -11,8 +11,4 @@ bool start_mdns_services(const char* hostname, const char* host_description, con
         mdns_service_add(NULL, service_type, proto, port, NULL, 0);          // Add the NTP service to mDNS
         return true;
     }
-}
-
-void stop_mdns_services() {
-    mdns_free();
 }

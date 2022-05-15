@@ -8,14 +8,14 @@ NTPServer::NTPServer(UBLOX_M9N* gps) {
 }
 
 NTPServer::~NTPServer() {
-    StopUDPListener();
+    stopUDPListener();
 }
 
 void NTPServer::GetRealtime() {
     clock_gettime(CLOCK_REALTIME, &this->timestamp);
 }
 
-void NTPServer::StartUDPListener() {
+void NTPServer::startUDPListener() {
     Serial.printf("Starting NTP UDP listener on 0.0.0.0:%i.\n", this->port);
     uint8_t err = this->UDP.begin(NTP_PORT);
     if (err == 0) {
@@ -24,12 +24,12 @@ void NTPServer::StartUDPListener() {
     }
 }
 
-void NTPServer::StopUDPListener() {
+void NTPServer::stopUDPListener() {
     Serial.println("Terminating NTP UDP listener.");
     this->UDP.stop();
 }
 
-void NTPServer::WaitForNTPPacket(void* args) {
+void NTPServer::waitForNTPPacket(void* args) {
     NTPServer* ntpServer = static_cast<NTPServer*>(args);
 
     for (;;) {
@@ -37,14 +37,14 @@ void NTPServer::WaitForNTPPacket(void* args) {
             Serial.println("Got UDP packet. Grabbing timestamp.");
             ntpServer->GetRealtime();
             Serial.println("Spawning reply thread.");
-            xTaskCreate(NTPServer::SendNTPReply, "Send NTP Reply", 5000, ntpServer, 1, NULL);
+            xTaskCreate(NTPServer::sendNTPReply, "Send NTP Reply", 5000, ntpServer, 1, NULL);
         }
 
         vTaskDelay(1 / portTICK_RATE_MS);  // Very short delay to give FreeRTOS watchdog timer a chance
     }
 }
 
-void NTPServer::SendNTPReply(void* args) {
+void NTPServer::sendNTPReply(void* args) {
     NTPServer* ntpServer = static_cast<NTPServer*>(args);
 
     // Set the timestamp for the RX packet
