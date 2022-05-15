@@ -106,6 +106,7 @@ void setup() {
 
     Serial.println("Obtaining first time stamp from GPS.");
     gps->saveEpochToRtc();
+    display->DrawSyncIcon(gps->getSIV());
 
     Serial.println("Starting up NTP server.");
     ntpServer.StartUDPListener();  // ntpServer is defined in main.h
