@@ -1,8 +1,10 @@
+#ifndef GNS_INCLUDE_GPS_TIMER_H_
 #include "gpsTimer.h"
+#endif
 
-void GpsUpdate(void* args) {
+void GNS::GpsUpdate(void* args) {
     // Cast args
-    GpsUpdateArgs* gpsUpdateArgs = static_cast<GpsUpdateArgs*>(args);
+    GNS::GpsUpdateArgs* gpsUpdateArgs = static_cast<GNS::GpsUpdateArgs*>(args);
 
     // Get epoch from GPS and update RTC
     gpsUpdateArgs->gps->saveEpochToRtc();

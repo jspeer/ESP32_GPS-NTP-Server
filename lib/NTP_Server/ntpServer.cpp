@@ -1,21 +1,21 @@
-#ifndef _NTP_SERVER_H_
+#ifndef GNS_LIB_NTP_SERVER_NTP_SERVER_H_
 #include "ntpServer.h"
 #endif
 
-NTPServer::NTPServer(UBLOX_M9N* gps) {
+GNS::NTPServer::NTPServer(GNS::UBLOX_M9N* gps) {
     this->port = NTP_PORT;
     this->gps = gps;
 }
 
-NTPServer::~NTPServer() {
+GNS::NTPServer::~NTPServer() {
     stopUDPListener();
 }
 
-void NTPServer::GetRealtime() {
+void GNS::NTPServer::GetRealtime() {
     clock_gettime(CLOCK_REALTIME, &this->timestamp);
 }
 
-void NTPServer::startUDPListener() {
+void GNS::NTPServer::startUDPListener() {
     Serial.printf("Starting NTP UDP listener on 0.0.0.0:%i.\n", this->port);
     uint8_t err = this->UDP.begin(NTP_PORT);
     if (err == 0) {
@@ -24,36 +24,36 @@ void NTPServer::startUDPListener() {
     }
 }
 
-void NTPServer::stopUDPListener() {
+void GNS::NTPServer::stopUDPListener() {
     Serial.println("Terminating NTP UDP listener.");
     this->UDP.stop();
 }
 
-void NTPServer::waitForNTPPacket(void* args) {
-    NTPServer* ntpServer = static_cast<NTPServer*>(args);
+void GNS::NTPServer::waitForNTPPacket(void* args) {
+    GNS::NTPServer* ntpServer = static_cast<GNS::NTPServer*>(args);
 
     for (;;) {
         if (ntpServer->UDP.parsePacket()) {
             Serial.println("Got UDP packet. Grabbing timestamp.");
             ntpServer->GetRealtime();
             Serial.println("Spawning reply thread.");
-            xTaskCreate(NTPServer::sendNTPReply, "Send NTP Reply", 5000, ntpServer, 1, NULL);
+            xTaskCreate(GNS::NTPServer::sendNTPReply, "Send NTP Reply", 5000, ntpServer, 1, NULL);
         }
 
         vTaskDelay(1 / portTICK_RATE_MS);  // Very short delay to give FreeRTOS watchdog timer a chance
     }
 }
 
-void NTPServer::sendNTPReply(void* args) {
-    NTPServer* ntpServer = static_cast<NTPServer*>(args);
+void GNS::NTPServer::sendNTPReply(void* args) {
+    GNS::NTPServer* ntpServer = static_cast<GNS::NTPServer*>(args);
 
     // Set the timestamp for the RX packet
     uint32_t rxTm_s = (uint32_t)ntpServer->timestamp.tv_sec;
     uint32_t rxTm_f = (uint32_t)ntpServer->timestamp.tv_nsec;
 
     // Create the client packet
-    NTPPacket clientPacket;
-    memset(&clientPacket, 0, sizeof(NTPPacket));
+    GNS::NTPPacket clientPacket;
+    memset(&clientPacket, 0, sizeof(GNS::NTPPacket));
 
     // Get the remote address information
     Serial.println("Getting remote connection information.");
@@ -66,8 +66,8 @@ void NTPServer::sendNTPReply(void* args) {
 
     // Create and zero out the reply packet.
     Serial.println("Starting reply packet.");
-    NTPPacket replyPacket;
-    memset(&replyPacket, 0, sizeof(NTPPacket));
+    GNS::NTPPacket replyPacket;
+    memset(&replyPacket, 0, sizeof(GNS::NTPPacket));
 
     // Set the first bytes bits to 00,011,100 for li = 0, vn = 3, and mode = 4. The rest will be left set to zero.
     *((char*) &replyPacket + 0) = 0b00011100;
@@ -104,7 +104,7 @@ void NTPServer::sendNTPReply(void* args) {
     replyPacket.refTm_f = __bswap_32((uint32_t)ntpServer->gps->epoch_ns);
 
     // Assign the tx timestamp in the reply packet
-    Serial.println("Assinging TX realtime.");
+    Serial.println("Assigning TX realtime.");
     ntpServer->GetRealtime();
     replyPacket.txTm_s = __bswap_32((uint32_t)ntpServer->timestamp.tv_sec + EPOCH_NTP64_OFFSET);  // Apply epoch ntp64 offset
     replyPacket.txTm_f = __bswap_32((uint32_t)ntpServer->timestamp.tv_nsec);

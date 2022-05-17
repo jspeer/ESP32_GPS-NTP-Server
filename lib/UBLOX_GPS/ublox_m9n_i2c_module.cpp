@@ -1,48 +1,50 @@
+#ifndef GNS_LIB_UBLOX_GPS_UBLOX_M9N_I2C_MODULE_H_
 #include "ublox_m9n_i2c_module.h"
+#endif
 
 // Set up i2c wires
-UBLOX_M9N::UBLOX_M9N(int sda, int scl) {
+GNS::UBLOX_M9N::UBLOX_M9N(int sda, int scl) {
     Wire.setPins(sda, scl);
     Wire.begin();
 }
 
 // Initialize GNSS unit
-bool UBLOX_M9N::init() {
-    if (!gnss_is_initialized) {
-        if (receiver->begin() == true) {
-            receiver->setI2COutput(COM_TYPE_UBX);
-            receiver->setMeasurementRate(UBLOX_RECEIVER_MEASUREMENT_RATE);
-            receiver->setNavigationFrequency(UBLOX_RECEIVER_NAVIGATION_RATE);
-            gnss_is_initialized = true;
+bool GNS::UBLOX_M9N::init() {
+    if (!this->gnss_is_initialized) {
+        if (this->receiver->begin() == true) {
+            this->receiver->setI2COutput(COM_TYPE_UBX);
+            this->receiver->setMeasurementRate(UBLOX_RECEIVER_MEASUREMENT_RATE);
+            this->receiver->setNavigationFrequency(UBLOX_RECEIVER_NAVIGATION_RATE);
+            this->gnss_is_initialized = true;
         }
     }
-    return gnss_is_initialized;
+    return this->gnss_is_initialized;
 }
 
 // Returns unix epoch seconds
-uint32_t UBLOX_M9N::getUnixEpoch() {
-    return receiver->getUnixEpoch();
+uint32_t GNS::UBLOX_M9N::getUnixEpoch() {
+    return this->receiver->getUnixEpoch();
 }
 
 // Sets epoch and epoch_us
-bool UBLOX_M9N::getUnixTime() {
-    epoch = receiver->getUnixEpoch(epoch_us);           // Call receiver->getUnixEpoch(), which in turn should call receiver->getPVT() if the data is stale
-    epoch_ns = receiver->packetUBXNAVPVT->data.nano;    // Grab the nano seconds from the data struct since it's fresh and doesn't require a new call to receiver->getPVT()
+bool GNS::UBLOX_M9N::getUnixTime() {
+    epoch = this->receiver->getUnixEpoch(epoch_us);           // Call receiver->getUnixEpoch(), which in turn should call receiver->getPVT() if the data is stale
+    epoch_ns = this->receiver->packetUBXNAVPVT->data.nano;    // Grab the nano seconds from the data struct since it's fresh and doesn't require a new call to receiver->getPVT()
     return (epoch) ? true : false;
 }
 
 // Returns bool if time and date are both valid
-bool UBLOX_M9N::dateAndTimeValid() {
-    return (receiver->getTimeValid() && receiver->getDateValid());
+bool GNS::UBLOX_M9N::dateAndTimeValid() {
+    return (this->receiver->getTimeValid() && this->receiver->getDateValid());
 }
 
 // Returns the number of Satellites in View
-uint8_t UBLOX_M9N::getSIV(uint16_t maxWait) {
-    return receiver->getSIV(maxWait);
+uint8_t GNS::UBLOX_M9N::getSIV(uint16_t maxWait) {
+    return this->receiver->getSIV(maxWait);
 }
 
-void UBLOX_M9N::saveEpochToRtc() {
-    if (getUnixTime()) {
+void GNS::UBLOX_M9N::saveEpochToRtc() {
+    if (this->getUnixTime()) {
         // Use time.h clock_settime() for high resolution timestamp
         const timespec res = { .tv_sec = (time_t)epoch, .tv_nsec = (long)epoch_us };
         clock_settime(CLOCK_REALTIME, &res);

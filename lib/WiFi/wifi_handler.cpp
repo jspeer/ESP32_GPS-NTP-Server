@@ -1,6 +1,8 @@
+#ifndef GNS_LIB_WIFI_WIFI_HANDLER_H_
 #include "wifi_handler.h"
+#endif
 
-void startWifi(App_Settings* appSettings, TTGO_Lcd* display) {
+void GNS::startWifi(GNS::App_Settings* appSettings, GNS::TTGO_Lcd* display) {
     WiFi.mode(WIFI_STA);                                                    // Set the wifi to station mode
     if (!appSettings->networkSettings.dhcp) {
         if (WiFi.config(
@@ -31,27 +33,27 @@ void startWifi(App_Settings* appSettings, TTGO_Lcd* display) {
     display->writeIPAddr(&ipaddr);                                          // Draw IP address on display
 
     // Start the wifi watchdog task
-    WifiTaskArgs* wifiTaskArgs = new WifiTaskArgs {
+    GNS::WifiTaskArgs* wifiTaskArgs = new GNS::WifiTaskArgs {
         .display = display,
         .appSettings = *appSettings
     };
-    xTaskCreate(wifiWatchdog, "Reconnect to WiFi", 5000, wifiTaskArgs, 1, NULL);
+    xTaskCreate(GNS::wifiWatchdog, "Reconnect to WiFi", 5000, wifiTaskArgs, 1, NULL);
 }
 
-void wifiWatchdog(void* args) {
-    WifiTaskArgs* wifiTaskArgs = static_cast<WifiTaskArgs*>(args);
+void GNS::wifiWatchdog(void* args) {
+    GNS::WifiTaskArgs* wifiTaskArgs = static_cast<GNS::WifiTaskArgs*>(args);
 
     for (;;) {
         if (WiFi.status() != WL_CONNECTED) {
-            xTaskCreatePinnedToCore(wifiReconnectTask, "Reconnect to WiFi", 5000, wifiTaskArgs, 1, NULL, 1);
+            xTaskCreatePinnedToCore(GNS::wifiReconnectTask, "Reconnect to WiFi", 5000, wifiTaskArgs, 1, NULL, 1);
         }
 
         vTaskDelay(5 / portTICK_RATE_MS * 1000);    // delay 5 seconds before checking again
     }
 }
 
-void wifiReconnectTask(void* args) {
-    WifiTaskArgs* wifiTaskArgs = static_cast<WifiTaskArgs*>(args);
+void GNS::wifiReconnectTask(void* args) {
+    GNS::WifiTaskArgs* wifiTaskArgs = static_cast<GNS::WifiTaskArgs*>(args);
 
     wifiTaskArgs->display->drawWifiIcon(false);
     Serial.print("Reconnecting to WiFi");

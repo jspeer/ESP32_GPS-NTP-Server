@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef _MAIN_H_
-#define _MAIN_H_
+#ifndef GNS_INCLUDE_MAIN_H_
+#define GNS_INCLUDE_MAIN_H_
 
 // System Includes
 #include <Arduino.h>
@@ -12,7 +12,7 @@
 // App Settings
 #include "version.h"
 #include "settings.h"
-App_Settings appSettings = LoadAppSettings("/config.json");
+GNS::App_Settings appSettings = GNS::LoadAppSettings("/config.json");
 
 // #include <WiFi.h>
 #include "wifi_handler.h"
@@ -22,20 +22,20 @@ App_Settings appSettings = LoadAppSettings("/config.json");
 
 // Init u-Blox M9N
 #include "ublox_m9n_i2c_module.h"
-UBLOX_M9N* gps = new UBLOX_M9N(appSettings.gpsSettings.sda_pin, appSettings.gpsSettings.scl_pin);
+GNS::UBLOX_M9N* gps = new GNS::UBLOX_M9N(appSettings.gpsSettings.sda_pin, appSettings.gpsSettings.scl_pin);
 
 // Init TFT
 #include "ttgo_lcd.h"
-TTGO_Lcd* display = new TTGO_Lcd;
+GNS::TTGO_Lcd* display = new GNS::TTGO_Lcd;
 
 // Include the timers
 #include "startTimers.h"
 
 // Include the NTP server
 #include "ntpServer.h"
-NTPServer ntpServer = NTPServer(gps);
+GNS::NTPServer ntpServer = GNS::NTPServer(gps);
 
 // ============ GLOBAL VARIABLES ===================================================
 #define TITLE "GPS NTP"  // shown at top of display
 
-#endif  // _MAIN_H_
+#endif  // GNS_INCLUDE_MAIN_H_

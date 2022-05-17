@@ -1,8 +1,8 @@
 #pragma once
 
-#ifndef _VERSION_H_
-#define _VERSION_H_
+#ifndef GNS_INCLUDE_VERSION_H_
+#define GNS_INCLUDE_VERSION_H_
 
-#define VERSION "1.2.0-beta"
+#define VERSION "1.2.1-dev"
 
-#endif  // _VERSION_H_
+#endif  // GNS_INCLUDE_VERSION_H_

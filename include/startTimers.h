@@ -1,5 +1,5 @@
-#ifndef _START_TIMERS_H_
-#define _START_TIMERS_H_
+#ifndef GNS_INCLUDE_START_TIMERS_H_
+#define GNS_INCLUDE_START_TIMERS_H_
 
 // Include the timers
 #include "gpsTimer.h"
@@ -13,10 +13,12 @@
 #include "ublox_m9n_i2c_module.h"
 #endif
 
-typedef struct StartTimersArgs {
-    TTGO_Lcd* display;
-    UBLOX_M9N* gps;
-} StartTimersArgs_t;
-void StartTimers(void* args);
+namespace GNS {
+    typedef struct StartTimersArgs {
+        GNS::TTGO_Lcd* display;
+        GNS::UBLOX_M9N* gps;
+    } StartTimersArgs_t;
+    void StartTimers(void* args);
+}
 
-#endif  // _START_TIMERS_H_
+#endif  // GNS_INCLUDE_START_TIMERS_H_

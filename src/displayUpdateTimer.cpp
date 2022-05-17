@@ -1,8 +1,10 @@
+#ifndef GNS_INCLUDE_DISPLAY_UPDATE_TIMER_H_
 #include "displayUpdateTimer.h"
+#endif
 
-void DisplayUpdateTimeDate(void* args) {
+void GNS::DisplayUpdateTimeDate(void* args) {
     // Cast args
-    DisplayUpdateArgs* displayUpdateArgs = static_cast<DisplayUpdateArgs*>(args);
+    GNS::DisplayUpdateArgs* displayUpdateArgs = static_cast<GNS::DisplayUpdateArgs*>(args);
 
     // Update display time
     time_t now;

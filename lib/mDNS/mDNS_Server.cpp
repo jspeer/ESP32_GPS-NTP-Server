@@ -1,6 +1,8 @@
+#ifndef GNS_LIB_MDNS_MDNS_SERVER_H_
 #include "mDNS_Server.h"
+#endif
 
-bool startMdnsService(const char* hostname, const char* host_description, const char* service_type, const char* proto, uint16_t port) {
+bool GNS::startMdnsService(const char* hostname, const char* host_description, const char* service_type, const char* proto, uint16_t port) {
     // Start mDNS service
     esp_err_t err = mdns_init();                                            // Initialize mDNS
     if (err) {

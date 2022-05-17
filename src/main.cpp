@@ -40,10 +40,10 @@ void setup() {
 
     // Start up the WiFi
     Serial.println("Initializing and configuring WiFi.");
-    startWifi(&appSettings, display);
+    GNS::startWifi(&appSettings, display);
 
     // Start mDNS
-    startMdnsService(appSettings.mDNSSettings.hostname, appSettings.mDNSSettings.host_description, appSettings.mDNSSettings.service_type, appSettings.mDNSSettings.proto, appSettings.mDNSSettings.port);
+    GNS::startMdnsService(appSettings.mDNSSettings.hostname, appSettings.mDNSSettings.host_description, appSettings.mDNSSettings.service_type, appSettings.mDNSSettings.proto, appSettings.mDNSSettings.port);
 
 /************************************************************************************
  * Start one shot hw timer which spawns other hardware timers (see startTimers.h)   *
@@ -52,14 +52,14 @@ void setup() {
  ************************************************************************************/
     Serial.println("Starting timers.");
     // Set up the arguments for StartTimers()
-    StartTimersArgs* startTimersArgs = new StartTimersArgs {
+    GNS::StartTimersArgs* startTimersArgs = new GNS::StartTimersArgs {
         .display = display,
         .gps = gps
     };
 
     // Create the timer arguments
     const esp_timer_create_args_t startTimersTimerArgs = {
-        .callback   = &StartTimers,
+        .callback   = &GNS::StartTimers,
         .arg        = static_cast<void*>(startTimersArgs),
         .name       = "Start Timers"
     };
@@ -76,7 +76,7 @@ void setup() {
 
     Serial.println("Starting up NTP server.");
     ntpServer.startUDPListener();  // ntpServer is defined in main.h
-    xTaskCreate(NTPServer::waitForNTPPacket, "NTP Server", 5000, &ntpServer, 1, NULL);
+    xTaskCreate(GNS::NTPServer::waitForNTPPacket, "NTP Server", 5000, &ntpServer, 1, NULL);
 
     // Delete "setup and loop" tasks
     Serial.println("Terminating main thread, relying on spawned threads now.");

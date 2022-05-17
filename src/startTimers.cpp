@@ -1,18 +1,20 @@
+#ifndef GNS_INCLUDE_START_TIMERS_H_
 #include "startTimers.h"
+#endif
 
-void StartTimers(void* args) {
-    StartTimersArgs* startTimersArgs = static_cast<StartTimersArgs*>(args);  // Cast the void* back into the arguments struct
+void GNS::StartTimers(void* args) {
+    GNS::StartTimersArgs* startTimersArgs = static_cast<GNS::StartTimersArgs*>(args);  // Cast the void* back into the arguments struct
 
 /************************************************************************************
  * Start DisplayUpdateTimeDate() timer with an interval of 1 second                 *
  ************************************************************************************/
     // Set up the arguments for DisplayUpdateTimeDate()
-    DisplayUpdateArgs* displayUpdateArgs = new DisplayUpdateArgs {
+    GNS::DisplayUpdateArgs* displayUpdateArgs = new GNS::DisplayUpdateArgs {
         .display = startTimersArgs->display
     };
     // Create the timer arguments
     const esp_timer_create_args_t displayUpdateTimerArgs = {
-        .callback   = &DisplayUpdateTimeDate,
+        .callback   = &GNS::DisplayUpdateTimeDate,
         .arg        = static_cast<void*>(displayUpdateArgs),
         .name       = "Display Update Time/Date"
     };
@@ -27,13 +29,13 @@ void StartTimers(void* args) {
  * Start GpsUpdate() timer with an interval of 60 seconds                           *
  ************************************************************************************/
     // Set up the arguments for GpsUpdate()
-    GpsUpdateArgs* gpsUpdateArgs = new GpsUpdateArgs {
+    GNS::GpsUpdateArgs* gpsUpdateArgs = new GNS::GpsUpdateArgs {
         .display = startTimersArgs->display,
         .gps = startTimersArgs->gps
     };
     // Create the timer arguments
     const esp_timer_create_args_t gpsUpdateTimerArgs = {
-        .callback   = &GpsUpdate,
+        .callback   = &GNS::GpsUpdate,
         .arg        = static_cast<void*>(gpsUpdateArgs),
         .name       = "GPS Update"
     };

@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GNS_LIB_UBLOX_GPS_UBLOX_M9N_I2C_MODULE_H_
+#define GNS_LIB_UBLOX_GPS_UBLOX_M9N_I2C_MODULE_H_
+
 // Include TFT library
 #ifndef __SPARKFUN_UBLOX_GNSS_ARDUINO_LIBRARY
 #include <Wire.h>
@@ -15,31 +18,34 @@
 
 #include "time.h"
 
-class UBLOX_M9N {
-// Members
-public:
-    int32_t  epoch_ns    = 0;     // epoch nanoseconds
-    uint32_t epoch_us    = 0;     // epoch microseconds
-    uint32_t epoch       = 0;     // epoch seconds
-    bool gnss_is_initialized = false;
-private:
-    SFE_UBLOX_GNSS* receiver = new SFE_UBLOX_GNSS;
+namespace GNS {
+    class UBLOX_M9N {
+    // Members
+    public:
+        int32_t  epoch_ns    = 0;     // epoch nanoseconds
+        uint32_t epoch_us    = 0;     // epoch microseconds
+        uint32_t epoch       = 0;     // epoch seconds
+        bool gnss_is_initialized = false;
+    private:
+        SFE_UBLOX_GNSS* receiver = new SFE_UBLOX_GNSS;
 
-// Class methods
-public:
-    UBLOX_M9N(int sda, int scl);
-    ~UBLOX_M9N() = default;
+    // Class methods
+    public:
+        UBLOX_M9N(int sda, int scl);
+        ~UBLOX_M9N() = default;
 
-// Custom methods
-public:
-    bool init();
-    bool dateAndTimeValid();
-    uint8_t getSIV(uint16_t maxWait = (uint16_t) 1100U);
-    // void saveEpochToRtc();
-    uint32_t getUnixEpoch();
-    int32_t getUnixEpochNs();
-    bool getUnixTime();
-    void saveEpochToRtc();
-private:
+    // Custom methods
+    public:
+        bool init();
+        bool dateAndTimeValid();
+        uint8_t getSIV(uint16_t maxWait = (uint16_t) 1100U);
+        uint32_t getUnixEpoch();
+        int32_t getUnixEpochNs();
+        bool getUnixTime();
+        void saveEpochToRtc();
+    private:
 
-};
+    };
+}
+
+#endif  // GNS_LIB_UBLOX_GPS_UBLOX_M9N_I2C_MODULE_H_

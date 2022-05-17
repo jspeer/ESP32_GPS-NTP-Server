@@ -1,11 +1,14 @@
+#ifndef GNS_INCLUDE_SETTINGS_H_
 #include "settings.h"
+#endif
+
 #include <arpa/inet.h>
 #include <ArduinoJson.h>
 
 #define FORMAT_LITTLEFS_IF_FAILED false
 
-App_Settings LoadAppSettings(const char* inifile) {
-    App_Settings appSettings;
+GNS::App_Settings GNS::LoadAppSettings(const char* inifile) {
+    GNS::App_Settings appSettings;
 
     DynamicJsonDocument doc(1024);
     if (LittleFS.begin(FORMAT_LITTLEFS_IF_FAILED)) {
