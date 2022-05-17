@@ -72,7 +72,7 @@ void GNS::NTPServer::sendNTPReply(void* args) {
     // Set the first bytes bits to 00,011,100 for li = 0, vn = 3, and mode = 4. The rest will be left set to zero.
     *((char*) &replyPacket + 0) = 0b00011100;
 
-    // Set the statum, 1 for reference clock
+    // Set the stratum, 1 for reference clock
     replyPacket.stratum         = 0b00000001;
 
     // Set the polling interval
@@ -94,7 +94,7 @@ void GNS::NTPServer::sendNTPReply(void* args) {
     replyPacket.rxTm_f          = __bswap_32(rxTm_f);
 
     // Assign the source tx time to the originating time in the reply packet
-    Serial.println("Assinging client TX time.");
+    Serial.println("Assigning client TX time.");
     replyPacket.origTm_s        = clientPacket.txTm_s;
     replyPacket.origTm_f        = clientPacket.txTm_f;
 
