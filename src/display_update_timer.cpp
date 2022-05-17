@@ -1,5 +1,5 @@
 #ifndef GNS_INCLUDE_DISPLAY_UPDATE_TIMER_H_
-#include "displayUpdateTimer.h"
+#include "display_update_timer.h"
 #endif
 
 void GNS::DisplayUpdateTimeDate(void* args) {

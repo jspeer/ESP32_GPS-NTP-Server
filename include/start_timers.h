@@ -2,8 +2,8 @@
 #define GNS_INCLUDE_START_TIMERS_H_
 
 // Include the timers
-#include "gpsTimer.h"
-#include "displayUpdateTimer.h"
+#include "gps_timer.h"
+#include "display_update_timer.h"
 
 #ifndef __TFT_ESPI
 #include "ttgo_lcd.h"

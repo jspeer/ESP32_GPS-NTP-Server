@@ -1,5 +1,5 @@
 #ifndef GNS_INCLUDE_START_TIMERS_H_
-#include "startTimers.h"
+#include "start_timers.h"
 #endif
 
 void GNS::StartTimers(void* args) {

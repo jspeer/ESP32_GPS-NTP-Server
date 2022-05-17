@@ -1,5 +1,5 @@
 #ifndef GNS_INCLUDE_GPS_TIMER_H_
-#include "gpsTimer.h"
+#include "gps_timer.h"
 #endif
 
 void GNS::GpsUpdate(void* args) {

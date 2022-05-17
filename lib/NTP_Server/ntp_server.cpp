@@ -1,5 +1,5 @@
 #ifndef GNS_LIB_NTP_SERVER_NTP_SERVER_H_
-#include "ntpServer.h"
+#include "ntp_server.h"
 #endif
 
 GNS::NTPServer::NTPServer(GNS::UBLOX_M9N* gps) {

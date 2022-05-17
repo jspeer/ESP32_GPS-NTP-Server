@@ -29,10 +29,10 @@ GNS::UBLOX_M9N* gps = new GNS::UBLOX_M9N(appSettings.gpsSettings.sda_pin, appSet
 GNS::TTGO_Lcd* display = new GNS::TTGO_Lcd;
 
 // Include the timers
-#include "startTimers.h"
+#include "start_timers.h"
 
 // Include the NTP server
-#include "ntpServer.h"
+#include "ntp_server.h"
 GNS::NTPServer ntpServer = GNS::NTPServer(gps);
 
 // ============ GLOBAL VARIABLES ===================================================
