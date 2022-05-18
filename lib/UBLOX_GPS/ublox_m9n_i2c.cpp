@@ -28,7 +28,7 @@ void GNS::UBLOX::SaveEpochToRtc() {
     // Get the packet from the receiver
     epoch = this->receiver->getUnixEpoch(epoch_us);           // Call receiver->getUnixEpoch(), which in turn should call receiver->getPVT() if the data is stale
     epoch_ns = this->receiver->packetUBXNAVPVT->data.nano;    // Grab the nano seconds from the current receiver packet
-    siv = this->receiver->packetUBXNAVPVT->data.numSV;        // Get the SIV from the current receiver packet
+    this->siv = this->receiver->packetUBXNAVPVT->data.numSV;  // Get the SIV from the current receiver packet
 
     // Use time.h clock_settime() for high resolution timestamp
     const timespec res = { .tv_sec = (time_t)epoch, .tv_nsec = (long)epoch_us };

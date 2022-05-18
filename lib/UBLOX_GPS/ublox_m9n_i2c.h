@@ -16,14 +16,16 @@
 #endif
 
 namespace GNS {
+
     class UBLOX {
     // Members
     public:
+        bool gnss_is_initialized = false; // module initialized
         int32_t  epoch_ns    = 0;     // epoch nanoseconds
         uint32_t epoch_us    = 0;     // epoch microseconds
         uint32_t epoch       = 0;     // epoch seconds
-        uint8_t  siv         = 0;     // satellites in view
-        bool gnss_is_initialized = false;
+        uint8_t  siv             = 0;     // satellites in view
+
     private:
         SFE_UBLOX_GNSS* receiver = new SFE_UBLOX_GNSS;
 

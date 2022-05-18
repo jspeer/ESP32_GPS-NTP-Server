@@ -10,6 +10,7 @@ void GNS::StartTimers(void* args) {
  ************************************************************************************/
     // Set up the arguments for DisplayUpdateTimeDate()
     GNS::Display_Update_Args* displayUpdateArgs = new GNS::Display_Update_Args {
+        .gps     = startTimersArgs->gps,
         .display = startTimersArgs->display
     };
     // Create the timer arguments
@@ -28,15 +29,10 @@ void GNS::StartTimers(void* args) {
 /************************************************************************************
  * Start GpsUpdate() timer with an interval of 60 seconds                           *
  ************************************************************************************/
-    // Set up the arguments for GpsUpdate()
-    GNS::GPS_Update_Args* gpsUpdateArgs = new GNS::GPS_Update_Args {
-        .display = startTimersArgs->display,
-        .gps = startTimersArgs->gps
-    };
     // Create the timer arguments
     const esp_timer_create_args_t gpsUpdateTimerArgs = {
         .callback   = &GNS::GpsUpdate,
-        .arg        = static_cast<void*>(gpsUpdateArgs),
+        .arg        = static_cast<void*>(startTimersArgs->gps),
         .name       = "GPS Update"
     };
     // Create the timer

@@ -40,13 +40,15 @@ void setup() {
 
     // Start up the WiFi
     Serial.println("Initializing and configuring WiFi.");
-    GNS::StartWiFi(&appSettings, display);
+    GNS::StartWiFi(&appSettings);
+    String ipaddr = WiFi.localIP().toString();
+    display->WriteIPAddr(&ipaddr);
 
     // Start mDNS
     GNS::StartMDNSService(appSettings.mDNSSettings.hostname, appSettings.mDNSSettings.host_description, appSettings.mDNSSettings.service_type, appSettings.mDNSSettings.proto, appSettings.mDNSSettings.port);
 
 /************************************************************************************
- * Start one shot hw timer which spawns other hardware timers (see startTimers.h)   *
+ * Start one shot hw timer which spawns other hardware timers (see start_timers.h)  *
  * Display updating and GPS reference time obtained using hardware timers           *
  * Using hardware timers instead of FreeRTOS software timers here for simplicity    *
  ************************************************************************************/
@@ -71,11 +73,11 @@ void setup() {
 /********************************* End of one-shot timer ****************************/
 
     Serial.println("Obtaining first time stamp from GPS.");
-    gps->SaveEpochToRtc();
-    display->DrawSyncIcon(gps->siv);
+    gps->SaveEpochToRtc();            // gps defined in main.h
+    display->DrawSyncIcon(gps->siv);  // display is defined in main.h
 
     Serial.println("Starting up NTP server.");
-    ntpServer.StartUDPListener();  // ntpServer is defined in main.h
+    ntpServer.StartUDPListener();     // ntp server is defined in main.h
     xTaskCreate(GNS::NTPServer::WaitForNTPPacket, "NTP Server", 5000, &ntpServer, 1, NULL);
 
     // Delete "setup and loop" tasks
