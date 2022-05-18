@@ -2,7 +2,7 @@
 #include "wifi_handler.h"
 #endif
 
-void GNS::StartWifi(GNS::App_Settings* appSettings, GNS::TTGO* display) {
+void GNS::StartWiFi(GNS::App_Settings* appSettings, GNS::TTGO* display) {
     WiFi.mode(WIFI_STA);                                                    // Set the wifi to station mode
     if (!appSettings->networkSettings.dhcp) {
         if (WiFi.config(
