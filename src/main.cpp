@@ -7,15 +7,9 @@
               https://creativecommons.org/publicdomain/zero/1.0/legalcode
  ************************************************************************************/
 
-#ifdef ARDUINO_ARCH_ESP32
-#include "esp32-hal-log.h"
-#endif
-
 #include "main.h"
 
 void setup() {
-    Serial.begin(115200);
-    vTaskDelay(500 / portTICK_PERIOD_MS);                                   // Delay so we are sure serial is up
     ESP_LOGI("System", "%s v%s starting up.", TITLE, VERSION);
 
     // Draw the base layer of the display
@@ -46,6 +40,7 @@ void setup() {
     display->WriteIPAddr(&ipaddr);
 
     // Start mDNS
+    ESP_LOGI("System", "Starting mDNS Service.");
     GNS::StartMDNSService(appSettings.mDNSSettings.hostname, appSettings.mDNSSettings.host_description, appSettings.mDNSSettings.service_type, appSettings.mDNSSettings.proto, appSettings.mDNSSettings.port);
 
 /************************************************************************************
