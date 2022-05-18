@@ -10,10 +10,10 @@
 #endif
 
 namespace GNS {
-    typedef struct GpsUpdateArgs {
-        GNS::TTGO_Lcd* display;
-        GNS::UBLOX_M9N* gps;
-    } GpsUpdateArgs_t;
+    typedef struct GPS_Update_Args {
+        GNS::TTGO* display;
+        GNS::UBLOX* gps;
+    } gps_update_args_t;
     void GpsUpdate(void* args);
 }
 

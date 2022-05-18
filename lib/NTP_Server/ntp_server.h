@@ -17,7 +17,7 @@ namespace GNS {
     class NTPServer {
     // Default methods
     public:
-        NTPServer(GNS::UBLOX_M9N* gps);
+        NTPServer(GNS::UBLOX* gps);
         ~NTPServer();
 
     // public members
@@ -25,24 +25,24 @@ namespace GNS {
         WiFiUDP UDP;
         timespec timestamp;
         uint16_t port;
-        GNS::UBLOX_M9N* gps;
+        GNS::UBLOX* gps;
 
     // private members
     private:
 
     // public methods
     public:
-        static void sendNTPReply(void* args);
-        static void waitForNTPPacket(void* args);
-        void startUDPListener();
-        void stopUDPListener();
+        static void SendNTPReply(void* args);
+        static void WaitForNTPPacket(void* args);
+        void StartUDPListener();
+        void StopUDPListener();
 
     // private methods
     private:
         void GetRealtime();
     };
 
-    typedef struct NTPPacket {
+    typedef struct NTP_Packet {
         uint8_t li_vn_mode;      // Eight bits. li, vn, and mode.
                                 // li.   Two bits.   Leap indicator.
                                 // vn.   Three bits. Version number of the protocol.

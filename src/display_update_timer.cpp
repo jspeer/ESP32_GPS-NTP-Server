@@ -4,7 +4,7 @@
 
 void GNS::DisplayUpdateTimeDate(void* args) {
     // Cast args
-    GNS::DisplayUpdateArgs* displayUpdateArgs = static_cast<GNS::DisplayUpdateArgs*>(args);
+    GNS::Display_Update_Args* displayUpdateArgs = static_cast<GNS::Display_Update_Args*>(args);
 
     // Update display time
     time_t now;
@@ -12,5 +12,5 @@ void GNS::DisplayUpdateTimeDate(void* args) {
     time(&now);
     localtime_r(&now, &timeinfo);
 
-    displayUpdateArgs->display->displayTime(&timeinfo);
+    displayUpdateArgs->display->DisplayTime(&timeinfo);
 }

@@ -9,13 +9,13 @@
 
 namespace GNS {
     typedef struct WifiTaskArgs {
-        GNS::TTGO_Lcd* display;
+        GNS::TTGO* display;
         GNS::App_Settings appSettings;
     } WifiTaskArgs_t;
 
-    void startWifi(GNS::App_Settings* appSettings, GNS::TTGO_Lcd* display);
-    void wifiWatchdog(void* args);
-    void wifiReconnectTask(void* args);
+    void StartWifi(GNS::App_Settings* appSettings, GNS::TTGO* display);
+    void WifiWatchdog(void* args);
+    void WifiReconnectTask(void* args);
 }
 
 #endif  // GNS_LIB_WIFI_WIFI_HANDLER_H_

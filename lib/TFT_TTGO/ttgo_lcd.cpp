@@ -5,21 +5,21 @@
 #include "time.h"
 #include "../../include/iot_iconset_16x16/iot_iconset_16x16.h"
 
-GNS::TTGO_Lcd::TTGO_Lcd() {
+GNS::TTGO::TTGO() {
     ;; // Placeholder
 }
 
-void GNS::TTGO_Lcd::init(int rotation) {
+void GNS::TTGO::Init(int rotation) {
     this->display->init();
     this->display->writecommand(ST7735_INVON);  // fix for inverted colors
     this->display->setRotation(rotation);
-    this->clearScreen();
+    this->ClearScreen();
 
     pinMode(TFT_BACKLIGHT_GPIO, OUTPUT);
     this->tft_is_initialized = true;
 }
 
-void GNS::TTGO_Lcd::sleep() {
+void GNS::TTGO::Sleep() {
     if (!this->tft_is_initialized) init();        // Called out of order, init the screen
 
     digitalWrite(TFT_BACKLIGHT_GPIO, LOW);  // Turn off the backlight
@@ -27,7 +27,7 @@ void GNS::TTGO_Lcd::sleep() {
     this->display->writecommand(ST7789_SLPIN);        // Enable sleep mode
 }
 
-void GNS::TTGO_Lcd::wake() {
+void GNS::TTGO::Wake() {
     if (!this->tft_is_initialized) init();        // Called out of order, init the screen
 
     this->display->writecommand(ST7789_SLPOUT);       // Disable sleep mode
@@ -35,16 +35,16 @@ void GNS::TTGO_Lcd::wake() {
     digitalWrite(TFT_BACKLIGHT_GPIO, HIGH); // Turn on the backlight
 }
 
-void GNS::TTGO_Lcd::clearScreen() {
+void GNS::TTGO::ClearScreen() {
     this->display->fillScreen(this->bgColor);
 }
 
-void GNS::TTGO_Lcd::drawBase(char* title, char* version) {
+void GNS::TTGO::DrawBase(char* title, char* version) {
     int sizeX = this->screenX - (this->borderWidth*2);
     int sizeY = this->screenY - (this->borderWidth*2);
     this->display->fillScreen(this->bgColor);
-    this->drawTitlebar(title);
-    this->drawFooterBar();
+    this->DrawTitlebar(title);
+    this->DrawFooterBar();
     this->display->drawRoundRect(this->borderWidth, this->borderWidth, sizeX, sizeY, this->radiusSize, this->borderColor);
 
     this->display->setTextColor(this->fontTimeFg, this->bgColor);
@@ -53,22 +53,22 @@ void GNS::TTGO_Lcd::drawBase(char* title, char* version) {
     this->display->setTextColor(this->fontColorOk, this->bgColor);
     this->display->drawString(_tzname[_daylight], 206, 29, 2);  // these are from time.h
 
-    this->writeVersion(version);
+    this->WriteVersion(version);
 }
 
-void GNS::TTGO_Lcd::drawTitlebar(char* title) {
+void GNS::TTGO::DrawTitlebar(char* title) {
     int sizeX = this->screenX - (this->borderWidth*2);
     this->display->fillRoundRect(this->borderWidth, this->borderWidth, sizeX, 20, this->radiusSize, this->fillColor);
     this->display->setTextColor(this->fontColorWarn, this->fillColor);
     this->display->drawCentreString(title, this->screenX / 2, 5, this->fontSizeNormal);
 }
 
-void GNS::TTGO_Lcd::drawFooterBar() {
+void GNS::TTGO::DrawFooterBar() {
     int sizeX = this->screenX - (this->borderWidth*2);
     this->display->fillRoundRect(this->borderWidth, this->screenY - this->borderWidth - 20, sizeX, 20, this->radiusSize, this->fillColor);
 }
 
-void GNS::TTGO_Lcd::drawWifiIcon(bool connected) {
+void GNS::TTGO::DrawWifiIcon(bool connected) {
     int posX = this->screenX - 22;
     int posY;
     int sizeX = 16;
@@ -82,11 +82,11 @@ void GNS::TTGO_Lcd::drawWifiIcon(bool connected) {
         this->display->drawRect(posX, posY+2, sizeX, sizeY, fillColor);
         this->display->drawBitmap(posX, posY, nocon_icon16x16, sizeX, sizeY, this->fontColorError, this->fillColor);
         String ipaddr = "No IP Address";
-        this->writeIPAddr(&ipaddr);
+        this->WriteIPAddr(&ipaddr);
     }
 }
 
-void GNS::TTGO_Lcd::drawNoSyncIcon() {
+void GNS::TTGO::DrawNoSyncIcon() {
     int posX = 6;
     int posY = 4;
     int sizeX = 16;
@@ -95,7 +95,7 @@ void GNS::TTGO_Lcd::drawNoSyncIcon() {
     this->display->drawBitmap(posX, posY, nocon_icon16x16, sizeX, sizeY, this->fontColorError, this->fillColor);
 }
 
-void GNS::TTGO_Lcd::drawSyncInProgressIcon() {
+void GNS::TTGO::DrawSyncInProgressIcon() {
     int posX = 6;
     int posY = 4;
     int sizeX = 16;
@@ -104,7 +104,7 @@ void GNS::TTGO_Lcd::drawSyncInProgressIcon() {
     this->display->drawBitmap(posX, posY, warning_icon16x16, sizeX, sizeY, this->fontColorWarn, this->fillColor);
 }
 
-void GNS::TTGO_Lcd::drawSyncIcon(int level) {
+void GNS::TTGO::DrawSyncIcon(int level) {
     int posX = 6;
     int posY = 4;
     int sizeX = 16;
@@ -112,7 +112,7 @@ void GNS::TTGO_Lcd::drawSyncIcon(int level) {
     this->display->drawRect(posX, posY+2, sizeX, sizeY, this->fillColor);
     switch (level) {
         case 0:
-            this->drawSyncInProgressIcon();
+            this->DrawSyncInProgressIcon();
             break;
         case 1:
             this->display->drawBitmap(posX, posY, signal1_icon16x16, sizeX, sizeY, this->fontColorOk, this->fillColor);;
@@ -130,7 +130,7 @@ void GNS::TTGO_Lcd::drawSyncIcon(int level) {
     }
 }
 
-void GNS::TTGO_Lcd::writeIPAddr(String* ipaddr) {
+void GNS::TTGO::WriteIPAddr(String* ipaddr) {
     int zeroY = this->screenY - this->borderWidth - 20;
     int zeroX = this->screenX - this->borderWidth;
     int posX = zeroX - 7;
@@ -141,7 +141,7 @@ void GNS::TTGO_Lcd::writeIPAddr(String* ipaddr) {
     this->display->drawRightString(ipaddr->c_str(), posX, posY, this->fontSizeNormal);
 }
 
-void GNS::TTGO_Lcd::writeVersion(char* version) {
+void GNS::TTGO::WriteVersion(char* version) {
     int zeroY = this->screenY - this->borderWidth - 20;
     int zeroX = 0 + this->borderWidth;
     int posX = zeroX + 7;
@@ -153,7 +153,7 @@ void GNS::TTGO_Lcd::writeVersion(char* version) {
     this->display->drawString(versionString, posX, posY, this->fontSizeNormal);
 }
 
-void GNS::TTGO_Lcd::displayTime(tm* timeinfo) {
+void GNS::TTGO::DisplayTime(tm* timeinfo) {
     char buffer[80];
 
     strftime(buffer, 80, "%T", timeinfo);

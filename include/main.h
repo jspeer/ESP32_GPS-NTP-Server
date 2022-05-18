@@ -22,11 +22,11 @@ GNS::App_Settings appSettings = GNS::LoadAppSettings("/config.json");
 
 // Init u-Blox M9N
 #include "ublox_m9n_i2c_module.h"
-GNS::UBLOX_M9N* gps = new GNS::UBLOX_M9N(appSettings.gpsSettings.sda_pin, appSettings.gpsSettings.scl_pin);
+GNS::UBLOX* gps = new GNS::UBLOX(appSettings.gpsSettings.sda_pin, appSettings.gpsSettings.scl_pin);
 
 // Init TFT
 #include "ttgo_lcd.h"
-GNS::TTGO_Lcd* display = new GNS::TTGO_Lcd;
+GNS::TTGO* display = new GNS::TTGO;
 
 // Include the timers
 #include "start_timers.h"

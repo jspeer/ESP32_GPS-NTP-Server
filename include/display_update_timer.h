@@ -6,9 +6,9 @@
 #endif
 
 namespace GNS {
-    typedef struct DisplayUpdateArgs {
-        GNS::TTGO_Lcd* display;
-    } DisplayUpdateArgs_t;
+    typedef struct Display_Update_Args {
+        GNS::TTGO* display;
+    } display_update_args_t;
     void DisplayUpdateTimeDate(void* args);
 }
 

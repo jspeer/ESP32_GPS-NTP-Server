@@ -14,10 +14,10 @@
 #endif
 
 namespace GNS {
-    typedef struct StartTimersArgs {
-        GNS::TTGO_Lcd* display;
-        GNS::UBLOX_M9N* gps;
-    } StartTimersArgs_t;
+    typedef struct Start_Timers_Args {
+        GNS::TTGO* display;
+        GNS::UBLOX* gps;
+    } start_timers_args_t;
     void StartTimers(void* args);
 }
 

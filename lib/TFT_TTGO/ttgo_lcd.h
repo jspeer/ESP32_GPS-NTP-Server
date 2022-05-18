@@ -25,11 +25,11 @@ namespace GNS {
     const int pwmResolution = 8;
     const int pwmLedChannelTFT = 0;
 
-    class TTGO_Lcd {
+    class TTGO {
     // Default methods
     public:
-        TTGO_Lcd();
-        ~TTGO_Lcd() = default;
+        TTGO();
+        ~TTGO() = default;
 
     // Public members
     public:
@@ -65,26 +65,26 @@ namespace GNS {
 
     // Public methods
     public:
-        void init(int rotation = 0);
-        void sleep();
-        void wake();
-        void clearScreen();
-        void drawBase(char* title, char* version);
-        void writeIPAddr(String* ipaddr);
+        void Init(int rotation = 0);
+        void Sleep();
+        void Wake();
+        void ClearScreen();
+        void DrawBase(char* title, char* version);
+        void WriteIPAddr(String* ipaddr);
 
     // Private methods
     private:
-        void drawTitlebar(char* title);
-        void drawFooterBar();
-        void writeVersion(char* version);
+        void DrawTitlebar(char* title);
+        void DrawFooterBar();
+        void WriteVersion(char* version);
 
     // Drawing Icons
     public:
-        void drawWifiIcon(bool connected);
-        void drawSyncInProgressIcon();
-        void drawSyncIcon(int level);
-        void displayTime(tm* timeinfo);
-        void drawNoSyncIcon();
+        void DrawWifiIcon(bool connected);
+        void DrawSyncInProgressIcon();
+        void DrawSyncIcon(int level);
+        void DisplayTime(tm* timeinfo);
+        void DrawNoSyncIcon();
 
     private:
     };

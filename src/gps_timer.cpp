@@ -4,15 +4,15 @@
 
 void GNS::GpsUpdate(void* args) {
     // Cast args
-    GNS::GpsUpdateArgs* gpsUpdateArgs = static_cast<GNS::GpsUpdateArgs*>(args);
+    GNS::GPS_Update_Args* gpsUpdateArgs = static_cast<GNS::GPS_Update_Args*>(args);
 
     // Get epoch from GPS and update RTC
-    gpsUpdateArgs->gps->saveEpochToRtc();
+    gpsUpdateArgs->gps->SaveEpochToRtc();
 
     // Update SAT signal indicator
     if (gpsUpdateArgs->gps->gnss_is_initialized) {
-        gpsUpdateArgs->display->drawSyncIcon(gpsUpdateArgs->gps->getSIV());  // TODO: We should replace this call to use the gps flags after the previous saveEpocToRtc() call at some point
+        gpsUpdateArgs->display->DrawSyncIcon(gpsUpdateArgs->gps->GetSIV());  // TODO: We should replace this call to use the gps flags after the previous saveEpocToRtc() call at some point
     } else {
-        gpsUpdateArgs->display->drawNoSyncIcon();
+        gpsUpdateArgs->display->DrawNoSyncIcon();
     }
 }

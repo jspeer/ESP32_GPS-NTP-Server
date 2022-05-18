@@ -3,13 +3,13 @@
 #endif
 
 void GNS::StartTimers(void* args) {
-    GNS::StartTimersArgs* startTimersArgs = static_cast<GNS::StartTimersArgs*>(args);  // Cast the void* back into the arguments struct
+    GNS::Start_Timers_Args* startTimersArgs = static_cast<GNS::Start_Timers_Args*>(args);  // Cast the void* back into the arguments struct
 
 /************************************************************************************
  * Start DisplayUpdateTimeDate() timer with an interval of 1 second                 *
  ************************************************************************************/
     // Set up the arguments for DisplayUpdateTimeDate()
-    GNS::DisplayUpdateArgs* displayUpdateArgs = new GNS::DisplayUpdateArgs {
+    GNS::Display_Update_Args* displayUpdateArgs = new GNS::Display_Update_Args {
         .display = startTimersArgs->display
     };
     // Create the timer arguments
@@ -29,7 +29,7 @@ void GNS::StartTimers(void* args) {
  * Start GpsUpdate() timer with an interval of 60 seconds                           *
  ************************************************************************************/
     // Set up the arguments for GpsUpdate()
-    GNS::GpsUpdateArgs* gpsUpdateArgs = new GNS::GpsUpdateArgs {
+    GNS::GPS_Update_Args* gpsUpdateArgs = new GNS::GPS_Update_Args {
         .display = startTimersArgs->display,
         .gps = startTimersArgs->gps
     };

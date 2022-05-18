@@ -19,7 +19,7 @@
 #include "time.h"
 
 namespace GNS {
-    class UBLOX_M9N {
+    class UBLOX {
     // Members
     public:
         int32_t  epoch_ns    = 0;     // epoch nanoseconds
@@ -31,18 +31,18 @@ namespace GNS {
 
     // Class methods
     public:
-        UBLOX_M9N(int sda, int scl);
-        ~UBLOX_M9N() = default;
+        UBLOX(int sda, int scl);
+        ~UBLOX() = default;
 
     // Custom methods
     public:
-        bool init();
-        bool dateAndTimeValid();
-        uint8_t getSIV(uint16_t maxWait = (uint16_t) 1100U);
-        uint32_t getUnixEpoch();
-        int32_t getUnixEpochNs();
-        bool getUnixTime();
-        void saveEpochToRtc();
+        bool Init();
+        bool DateAndTimeValid();
+        uint8_t GetSIV(uint16_t maxWait = (uint16_t) 1100U);
+        uint32_t GetUnixEpoch();
+        int32_t GetUnixEpochNs();
+        bool GetUnixTime();
+        void SaveEpochToRtc();
     private:
 
     };

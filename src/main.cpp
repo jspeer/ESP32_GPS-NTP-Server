@@ -17,21 +17,21 @@ void setup() {
 
     // Draw the base layer of the display
     Serial.println("Initializing display.");  // display is defined in main.h
-    display->init(1);                                                       // Initialize the display
-    display->drawBase(TITLE, VERSION);                                      // Draw the base display layer
-    display->drawWifiIcon(false);                                           // Draw WiFi icon on display
+    display->Init(1);                                                       // Initialize the display
+    display->DrawBase(TITLE, VERSION);                                      // Draw the base display layer
+    display->DrawWifiIcon(false);                                           // Draw WiFi icon on display
 
     // Initialize the GPS unit
     Serial.print("Initializing GPS.");
-    gps->init();  // gps is defined in main.h
+    gps->Init();  // gps is defined in main.h
     vTaskDelay(500 / portTICK_PERIOD_MS);                                   // Wait for GPS module to initialize
     while (gps->gnss_is_initialized == false) {
         Serial.print(".");
-        display->drawNoSyncIcon();
-        gps->init();                                                        // Retry GPS init()
+        display->DrawNoSyncIcon();
+        gps->Init();                                                        // Retry GPS init()
         vTaskDelay(500 / portTICK_PERIOD_MS);
     }
-    display->drawSyncInProgressIcon();                                      // Draw sync icon on display
+    display->DrawSyncInProgressIcon();                                      // Draw sync icon on display
     Serial.println();
 
     // Set up Time Zone as defined in main.h
@@ -40,10 +40,10 @@ void setup() {
 
     // Start up the WiFi
     Serial.println("Initializing and configuring WiFi.");
-    GNS::startWifi(&appSettings, display);
+    GNS::StartWifi(&appSettings, display);
 
     // Start mDNS
-    GNS::startMdnsService(appSettings.mDNSSettings.hostname, appSettings.mDNSSettings.host_description, appSettings.mDNSSettings.service_type, appSettings.mDNSSettings.proto, appSettings.mDNSSettings.port);
+    GNS::StartMdnsService(appSettings.mDNSSettings.hostname, appSettings.mDNSSettings.host_description, appSettings.mDNSSettings.service_type, appSettings.mDNSSettings.proto, appSettings.mDNSSettings.port);
 
 /************************************************************************************
  * Start one shot hw timer which spawns other hardware timers (see startTimers.h)   *
@@ -52,7 +52,7 @@ void setup() {
  ************************************************************************************/
     Serial.println("Starting timers.");
     // Set up the arguments for StartTimers()
-    GNS::StartTimersArgs* startTimersArgs = new GNS::StartTimersArgs {
+    GNS::Start_Timers_Args* startTimersArgs = new GNS::Start_Timers_Args {
         .display = display,
         .gps = gps
     };
@@ -71,12 +71,12 @@ void setup() {
 /********************************* End of one-shot timer ****************************/
 
     Serial.println("Obtaining first time stamp from GPS.");
-    gps->saveEpochToRtc();
-    display->drawSyncIcon(gps->getSIV());
+    gps->SaveEpochToRtc();
+    display->DrawSyncIcon(gps->GetSIV());
 
     Serial.println("Starting up NTP server.");
-    ntpServer.startUDPListener();  // ntpServer is defined in main.h
-    xTaskCreate(GNS::NTPServer::waitForNTPPacket, "NTP Server", 5000, &ntpServer, 1, NULL);
+    ntpServer.StartUDPListener();  // ntpServer is defined in main.h
+    xTaskCreate(GNS::NTPServer::WaitForNTPPacket, "NTP Server", 5000, &ntpServer, 1, NULL);
 
     // Delete "setup and loop" tasks
     Serial.println("Terminating main thread, relying on spawned threads now.");
