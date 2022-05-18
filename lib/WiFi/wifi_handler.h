@@ -8,14 +8,9 @@
 #include "../../include/settings.h"
 
 namespace GNS {
-    typedef struct WifiTaskArgs {
-        GNS::TTGO* display;
-        GNS::App_Settings appSettings;
-    } WifiTaskArgs_t;
-
-    void StartWiFi(GNS::App_Settings* appSettings, GNS::TTGO* display);
-    void WifiWatchdog(void* args);
-    void WifiReconnectTask(void* args);
+    void StartWiFi(GNS::App_Settings* appSettings);
+    void WiFiWatchdog(void* args);
+    void WiFiReconnectTask(void* args);
 }
 
 #endif  // GNS_LIB_WIFI_WIFI_HANDLER_H_
