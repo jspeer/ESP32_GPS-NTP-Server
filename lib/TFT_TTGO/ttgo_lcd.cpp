@@ -5,10 +5,6 @@
 #include "time.h"
 #include "../../include/iot_iconset_16x16/iot_iconset_16x16.h"
 
-GNS::TTGO::TTGO() {
-    ;; // Placeholder
-}
-
 void GNS::TTGO::Init(int rotation) {
     this->display->init();
     this->display->writecommand(ST7735_INVON);  // fix for inverted colors
@@ -171,4 +167,27 @@ void GNS::TTGO::DisplayTime(tm* timeinfo) {
 
     this->display->setTextColor(this->fontColorOk, this->bgColor);
     this->display->drawString(_tzname[_daylight], 206, 29, 2);  // these are from time.h
+}
+
+void GNS::TTGO::DisplayUpdateTimeDate(void* args) {
+    // Cast args
+    GNS::TTGO::Display_Update_Args* displayUpdateArgs = static_cast<GNS::TTGO::Display_Update_Args*>(args);
+
+    // Update the wifi status indicator
+    displayUpdateArgs->display->DrawWifiIcon(WiFi.status() == WL_CONNECTED);
+
+    // Update the satellites in view indicator
+    if (displayUpdateArgs->gps->gnss_is_initialized == false) {
+        displayUpdateArgs->display->DrawNoSyncIcon();
+    } else {
+        displayUpdateArgs->display->DrawSyncIcon(displayUpdateArgs->gps->siv);
+    }
+
+    // Update display time
+    time_t now;
+    tm timeinfo;
+    time(&now);
+    localtime_r(&now, &timeinfo);
+
+    displayUpdateArgs->display->DisplayTime(&timeinfo);
 }

@@ -9,13 +9,13 @@ void GNS::StartTimers(void* args) {
  * Start DisplayUpdateTimeDate() timer with an interval of 1 second                 *
  ************************************************************************************/
     // Set up the arguments for DisplayUpdateTimeDate()
-    GNS::Display_Update_Args* displayUpdateArgs = new GNS::Display_Update_Args {
+    GNS::TTGO::Display_Update_Args* displayUpdateArgs = new GNS::TTGO::Display_Update_Args {
         .gps     = startTimersArgs->gps,
         .display = startTimersArgs->display
     };
     // Create the timer arguments
     const esp_timer_create_args_t displayUpdateTimerArgs = {
-        .callback   = &GNS::DisplayUpdateTimeDate,
+        .callback   = &GNS::TTGO::DisplayUpdateTimeDate,
         .arg        = static_cast<void*>(displayUpdateArgs),
         .name       = "Display Update Time/Date"
     };
@@ -31,7 +31,6 @@ void GNS::StartTimers(void* args) {
  ************************************************************************************/
     // Create the timer arguments
     const esp_timer_create_args_t gpsUpdateTimerArgs = {
-        // .callback   = &GNS::GpsUpdate,
         .callback   = &GNS::UBLOX::TimeUpdate,
         .arg        = static_cast<void*>(startTimersArgs->gps),
         .name       = "GPS Update"

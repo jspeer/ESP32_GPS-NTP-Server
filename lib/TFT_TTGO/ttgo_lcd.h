@@ -7,6 +7,12 @@
 #include <TFT_eSPI.h>                              // display driver - install within IDE
 #define TFT_BACKLIGHT_GPIO 4
 
+#include <WiFi.h>
+
+#ifndef GNS_LIB_UBLOX_GPS_UBLOX_M9N_I2C_H_
+#include "ublox_m9n_i2c.h"
+#endif
+
 #ifndef TFT_DISPOFF
 #define TFT_DISPOFF 0x28
 #endif
@@ -24,9 +30,16 @@ namespace GNS {
     const int pwmLedChannelTFT = 0;
 
     class TTGO {
+    // Public structs
+    public:
+        typedef struct Display_Update_Args {
+            GNS::UBLOX* gps;
+            GNS::TTGO* display;
+        } display_update_args_t;
+
     // Default methods
     public:
-        TTGO();
+        TTGO()  = default;
         ~TTGO() = default;
 
     // Public members
@@ -83,7 +96,7 @@ namespace GNS {
         void DrawSyncIcon(int level);
         void DisplayTime(tm* timeinfo);
         void DrawNoSyncIcon();
-
+        static void DisplayUpdateTimeDate(void* args);
     private:
     };
 }
