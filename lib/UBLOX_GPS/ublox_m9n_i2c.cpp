@@ -29,7 +29,8 @@ uint32_t GNS::UBLOX::GetUnixEpoch() {
 // Sets epoch and epoch_us
 bool GNS::UBLOX::GetUnixTime() {
     epoch = this->receiver->getUnixEpoch(epoch_us);           // Call receiver->getUnixEpoch(), which in turn should call receiver->getPVT() if the data is stale
-    epoch_ns = this->receiver->packetUBXNAVPVT->data.nano;    // Grab the nano seconds from the data struct since it's fresh and doesn't require a new call to receiver->getPVT()
+    epoch_ns = this->receiver->packetUBXNAVPVT->data.nano;    // Grab the nano seconds from the current receiver packet
+    siv = this->receiver->packetUBXNAVPVT->data.numSV;        // Get the SIV from the current receiver packet
     return (epoch) ? true : false;
 }
 
@@ -40,7 +41,8 @@ bool GNS::UBLOX::DateAndTimeValid() {
 
 // Returns the number of Satellites in View
 uint8_t GNS::UBLOX::GetSIV(uint16_t maxWait) {
-    return this->receiver->getSIV(maxWait);
+    siv = this->receiver->getSIV(maxWait);
+    return siv;
 }
 
 void GNS::UBLOX::SaveEpochToRtc() {

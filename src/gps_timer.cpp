@@ -11,7 +11,7 @@ void GNS::GpsUpdate(void* args) {
 
     // Update SAT signal indicator
     if (gpsUpdateArgs->gps->gnss_is_initialized) {
-        gpsUpdateArgs->display->DrawSyncIcon(gpsUpdateArgs->gps->GetSIV());  // TODO: We should replace this call to use the gps flags after the previous saveEpocToRtc() call at some point
+        gpsUpdateArgs->display->DrawSyncIcon(gpsUpdateArgs->gps->siv);
     } else {
         gpsUpdateArgs->display->DrawNoSyncIcon();
     }
