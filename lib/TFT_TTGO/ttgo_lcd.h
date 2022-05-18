@@ -25,10 +25,6 @@
 #define ST7735_INVON 0x21
 
 namespace GNS {
-    const int pwmFreq = 5000;
-    const int pwmResolution = 8;
-    const int pwmLedChannelTFT = 0;
-
     class TTGO {
     // Public structs
     public:
