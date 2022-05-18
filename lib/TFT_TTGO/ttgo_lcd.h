@@ -67,14 +67,14 @@ namespace GNS {
         void Sleep();
         void Wake();
         void ClearScreen();
-        void DrawBase(char* title, char* version);
+        void DrawBase(char const* title, char const* version);
         void WriteIPAddr(String* ipaddr);
 
     // Private methods
     private:
-        void DrawTitlebar(char* title);
+        void DrawTitlebar(char const* title);
         void DrawFooterBar();
-        void WriteVersion(char* version);
+        void WriteVersion(char const* version);
 
     // Drawing Icons
     public:

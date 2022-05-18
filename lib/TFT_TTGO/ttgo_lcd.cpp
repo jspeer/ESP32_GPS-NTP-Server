@@ -39,7 +39,7 @@ void GNS::TTGO::ClearScreen() {
     this->display->fillScreen(this->bgColor);
 }
 
-void GNS::TTGO::DrawBase(char* title, char* version) {
+void GNS::TTGO::DrawBase(char const* title, char const* version) {
     int sizeX = this->screenX - (this->borderWidth*2);
     int sizeY = this->screenY - (this->borderWidth*2);
     this->display->fillScreen(this->bgColor);
@@ -56,7 +56,7 @@ void GNS::TTGO::DrawBase(char* title, char* version) {
     this->WriteVersion(version);
 }
 
-void GNS::TTGO::DrawTitlebar(char* title) {
+void GNS::TTGO::DrawTitlebar(char const* title) {
     int sizeX = this->screenX - (this->borderWidth*2);
     this->display->fillRoundRect(this->borderWidth, this->borderWidth, sizeX, 20, this->radiusSize, this->fillColor);
     this->display->setTextColor(this->fontColorWarn, this->fillColor);
@@ -141,7 +141,7 @@ void GNS::TTGO::WriteIPAddr(String* ipaddr) {
     this->display->drawRightString(ipaddr->c_str(), posX, posY, this->fontSizeNormal);
 }
 
-void GNS::TTGO::WriteVersion(char* version) {
+void GNS::TTGO::WriteVersion(char const* version) {
     int zeroY = this->screenY - this->borderWidth - 20;
     int zeroX = 0 + this->borderWidth;
     int posX = zeroX + 7;
