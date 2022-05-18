@@ -40,10 +40,10 @@ void setup() {
 
     // Start up the WiFi
     Serial.println("Initializing and configuring WiFi.");
-    GNS::StartWifi(&appSettings, display);
+    GNS::StartWiFi(&appSettings, display);
 
     // Start mDNS
-    GNS::StartMdnsService(appSettings.mDNSSettings.hostname, appSettings.mDNSSettings.host_description, appSettings.mDNSSettings.service_type, appSettings.mDNSSettings.proto, appSettings.mDNSSettings.port);
+    GNS::StartMDNSService(appSettings.mDNSSettings.hostname, appSettings.mDNSSettings.host_description, appSettings.mDNSSettings.service_type, appSettings.mDNSSettings.proto, appSettings.mDNSSettings.port);
 
 /************************************************************************************
  * Start one shot hw timer which spawns other hardware timers (see startTimers.h)   *

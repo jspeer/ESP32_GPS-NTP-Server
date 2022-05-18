@@ -1,4 +1,4 @@
-#ifndef GNS_LIB_TFT_TTGO_TTGO_LCD_H_
+#ifndef GNS_LIB_TFT_TTGO_TTGO_H_
 #include "ttgo_lcd.h"
 #endif
 

@@ -6,7 +6,7 @@
 #endif
 
 #ifndef __SPARKFUN_UBLOX_GNSS_ARDUINO_LIBRARY
-#include "ublox_m9n_i2c_module.h"
+#include "ublox_m9n_i2c.h"
 #endif
 
 namespace GNS {

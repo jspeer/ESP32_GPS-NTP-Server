@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef GNS_LIB_TFT_TTGO_TTGO_LCD_H_
-#define GNS_LIB_TFT_TTGO_TTGO_LCD_H_
+#ifndef GNS_LIB_TFT_TTGO_TTGO_H_
+#define GNS_LIB_TFT_TTGO_TTGO_H_
 // Include TFT library
 #ifndef __TFT_ESPI
 #include <TFT_eSPI.h>                              // display driver - install within IDE
@@ -90,4 +90,4 @@ namespace GNS {
     };
 }
 
-#endif  // GNS_LIB_TFT_TTGO_TTGO_LCD_H_
+#endif  // GNS_LIB_TFT_TTGO_TTGO_H_

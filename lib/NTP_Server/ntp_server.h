@@ -6,7 +6,7 @@
 #include <WiFiUdp.h>
 #include <time.h>
 
-#include "ublox_m9n_i2c_module.h"
+#include "ublox_m9n_i2c.h"
 
 #define NTP_PORT 123
 #define NTP_PACKET_SIZE 48

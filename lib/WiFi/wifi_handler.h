@@ -13,7 +13,7 @@ namespace GNS {
         GNS::App_Settings appSettings;
     } WifiTaskArgs_t;
 
-    void StartWifi(GNS::App_Settings* appSettings, GNS::TTGO* display);
+    void StartWiFi(GNS::App_Settings* appSettings, GNS::TTGO* display);
     void WifiWatchdog(void* args);
     void WifiReconnectTask(void* args);
 }
