@@ -13,7 +13,6 @@
 #define EPOCH_NTP64_OFFSET 2208988800   // Difference from NTP64 to EPOCH (Jan 1 1900 to Jan 1 1970)
 
 namespace GNS {
-    // Convert NTP server to OOP
     class NTPServer {
     // Default methods
     public:

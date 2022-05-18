@@ -2,19 +2,19 @@
 #include "ntp_server.h"
 #endif
 
-GNS::NTPServer::NTPServer(GNS::UBLOX* gps) {
-    this->port = NTP_PORT;
-    this->gps = gps;
-}
+// Constructor with initialization list
+GNS::NTPServer::NTPServer(GNS::UBLOX* ublox) : port{NTP_PORT}, gps{ublox} { }  // NTP_PORT is defined in ntp_server.h
 
 GNS::NTPServer::~NTPServer() {
     StopUDPListener();
 }
 
+// Grab the RTC time stamp and apply it to the object timestamp
 void GNS::NTPServer::GetRealtime() {
     clock_gettime(CLOCK_REALTIME, &this->timestamp);
 }
 
+// Start UDP listener on port (defined in constructor)
 void GNS::NTPServer::StartUDPListener() {
     Serial.printf("Starting NTP UDP listener on 0.0.0.0:%i.\n", this->port);
     uint8_t err = this->UDP.begin(NTP_PORT);
@@ -24,26 +24,29 @@ void GNS::NTPServer::StartUDPListener() {
     }
 }
 
+// Terminate UDP listener
 void GNS::NTPServer::StopUDPListener() {
     Serial.println("Terminating NTP UDP listener.");
     this->UDP.stop();
 }
 
+// Loop to handle incoming UDP packets
 void GNS::NTPServer::WaitForNTPPacket(void* args) {
     GNS::NTPServer* ntpServer = static_cast<GNS::NTPServer*>(args);
 
-    for (;;) {
-        if (ntpServer->UDP.parsePacket()) {
+    for (;;) {  // Infinite loop
+        if (ntpServer->UDP.parsePacket()) {  // Packet was found in UDP queue
             Serial.println("Got UDP packet. Grabbing timestamp.");
             ntpServer->GetRealtime();
             Serial.println("Spawning reply thread.");
-            xTaskCreate(GNS::NTPServer::SendNTPReply, "Send NTP Reply", 5000, ntpServer, 1, NULL);
+            xTaskCreate(GNS::NTPServer::SendNTPReply, "Send NTP Reply", 5000, ntpServer, 1, NULL);  // Spawn task to reply to this packet
         }
 
         vTaskDelay(1 / portTICK_RATE_MS);  // Very short delay to give FreeRTOS watchdog timer a chance
     }
 }
 
+// Task responsible for handing UDP packet reply
 void GNS::NTPServer::SendNTPReply(void* args) {
     GNS::NTPServer* ntpServer = static_cast<GNS::NTPServer*>(args);
 
