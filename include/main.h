@@ -10,7 +10,9 @@
 #include <time.h>
 
 #ifdef ARDUINO_ARCH_ESP32
+#ifndef __ARDUHAL_LOG_H__
 #include <esp32-hal-log.h>
+#endif
 #endif
 
 // App Settings

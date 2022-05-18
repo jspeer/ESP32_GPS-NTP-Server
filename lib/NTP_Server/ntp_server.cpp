@@ -11,6 +11,7 @@ GNS::NTPServer::~NTPServer() {
 
 // Grab the RTC time stamp and apply it to the object timestamp
 void GNS::NTPServer::GetRealtime() {
+    ESP_LOGI("RTC", "Getting time from RTC.");
     clock_gettime(CLOCK_REALTIME, &this->timestamp);
 }
 

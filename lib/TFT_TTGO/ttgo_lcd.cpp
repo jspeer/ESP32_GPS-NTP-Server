@@ -6,6 +6,7 @@
 #include "../../include/iot_iconset_16x16/iot_iconset_16x16.h"
 
 void GNS::TTGO::Init(int rotation) {
+    ESP_LOGI("TTGO", "Initializing TFT screen.");
     this->display->init();
     this->display->writecommand(ST7735_INVON);  // fix for inverted colors
     this->display->setRotation(rotation);
@@ -16,6 +17,7 @@ void GNS::TTGO::Init(int rotation) {
 }
 
 void GNS::TTGO::Sleep() {
+    ESP_LOGI("TTGO", "Sleeping the TFT screen.");
     if (!this->tft_is_initialized) init();        // Called out of order, init the screen
 
     digitalWrite(TFT_BACKLIGHT_GPIO, LOW);  // Turn off the backlight
@@ -24,6 +26,7 @@ void GNS::TTGO::Sleep() {
 }
 
 void GNS::TTGO::Wake() {
+    ESP_LOGI("TTGO", "Waking the TFT screen.");
     if (!this->tft_is_initialized) init();        // Called out of order, init the screen
 
     this->display->writecommand(ST7789_SLPOUT);       // Disable sleep mode
@@ -143,7 +146,7 @@ void GNS::TTGO::WriteVersion(char const* version) {
     int posX = zeroX + 7;
     int posY = zeroY + 1;
     char versionString[100];
-    strcpy(versionString, "FW: ");
+    strcpy(versionString, "FW: v");
     strcat(versionString, version);
     this->display->setTextColor(this->fontColorWarn, this->fillColor);
     this->display->drawString(versionString, posX, posY, this->fontSizeNormal);

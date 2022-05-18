@@ -4,6 +4,7 @@
 
 // Start up the WiFi connection using settings from App_Settings (see app_settings.h)
 void GNS::StartWiFi(GNS::App_Settings* appSettings) {
+    ESP_LOGI("WiFi", "Setting wifi mode and parameters from config.json");
     WiFi.mode(WIFI_STA);
     if (!appSettings->networkSettings.dhcp) {
         if (WiFi.config(

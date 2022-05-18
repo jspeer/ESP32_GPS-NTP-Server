@@ -11,7 +11,9 @@ GNS::App_Settings GNS::LoadAppSettings(const char* inifile) {
     GNS::App_Settings appSettings;
 
     DynamicJsonDocument doc(1024);
+    ESP_LOGI("Settings", "Starting LittleFS");
     if (LittleFS.begin(FORMAT_LITTLEFS_IF_FAILED)) {
+        ESP_LOGI("Settings", "Reading /config.json from LittleFS.");
         if (File fp = LittleFS.open(inifile, "r", false)) {
             // Read the contents of the file
             char buf[fp.size()];
@@ -19,6 +21,7 @@ GNS::App_Settings GNS::LoadAppSettings(const char* inifile) {
             fp.close();
 
             // Parse the JSON content into multidimensional object
+            ESP_LOGI("Settings", "Deserializing JSON from /config.json");
             DeserializationError err = deserializeJson(doc, buf);
             if (err.code() == err.Ok) {
                 JsonObject jsonConfig = doc.as<JsonObject>();

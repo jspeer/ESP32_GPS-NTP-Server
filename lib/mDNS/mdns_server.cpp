@@ -8,8 +8,10 @@ bool GNS::StartMDNSService(const char* hostname, const char* host_description, c
     if (err) {
         return false;
     } else {
+        ESP_LOGI("mDNS", "Setting mDNS parameters hostname: %s description: %s", hostname, host_description);
         mdns_hostname_set(hostname);                                        // Set the mDNS hostname
         mdns_instance_name_set(host_description);                           // Set the mDNS instance name
+        ESP_LOGI("mDNS", "Adding service %s %s/%i", service_type, proto, port);
         mdns_service_add(NULL, service_type, proto, port, NULL, 0);          // Add the NTP service to mDNS
         return true;
     }
