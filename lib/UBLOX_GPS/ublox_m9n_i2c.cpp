@@ -2,6 +2,8 @@
 #include "ublox_m9n_i2c.h"
 #endif
 
+#include <time.h>
+
 // Set up i2c wires
 GNS::UBLOX::UBLOX(int sda, int scl) {
     Wire.setPins(sda, scl);
@@ -21,34 +23,14 @@ bool GNS::UBLOX::Init() {
     return this->gnss_is_initialized;
 }
 
-// Returns unix epoch seconds
-uint32_t GNS::UBLOX::GetUnixEpoch() {
-    return this->receiver->getUnixEpoch();
-}
-
-// Sets epoch and epoch_us
-bool GNS::UBLOX::GetUnixTime() {
+// Obtain and save the epoch time to ESP RTC from the receiver
+void GNS::UBLOX::SaveEpochToRtc() {
+    // Get the packet from the receiver
     epoch = this->receiver->getUnixEpoch(epoch_us);           // Call receiver->getUnixEpoch(), which in turn should call receiver->getPVT() if the data is stale
     epoch_ns = this->receiver->packetUBXNAVPVT->data.nano;    // Grab the nano seconds from the current receiver packet
     siv = this->receiver->packetUBXNAVPVT->data.numSV;        // Get the SIV from the current receiver packet
-    return (epoch) ? true : false;
-}
 
-// Returns bool if time and date are both valid
-bool GNS::UBLOX::DateAndTimeValid() {
-    return (this->receiver->getTimeValid() && this->receiver->getDateValid());
-}
-
-// Returns the number of Satellites in View
-uint8_t GNS::UBLOX::GetSIV(uint16_t maxWait) {
-    siv = this->receiver->getSIV(maxWait);
-    return siv;
-}
-
-void GNS::UBLOX::SaveEpochToRtc() {
-    if (this->GetUnixTime()) {
-        // Use time.h clock_settime() for high resolution timestamp
-        const timespec res = { .tv_sec = (time_t)epoch, .tv_nsec = (long)epoch_us };
-        clock_settime(CLOCK_REALTIME, &res);
-    }
+    // Use time.h clock_settime() for high resolution timestamp
+    const timespec res = { .tv_sec = (time_t)epoch, .tv_nsec = (long)epoch_us };
+    clock_settime(CLOCK_REALTIME, &res);
 }

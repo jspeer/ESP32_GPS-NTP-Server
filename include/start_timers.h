@@ -9,8 +9,8 @@
 #include "ttgo_lcd.h"
 #endif
 
-#ifndef __SPARKFUN_UBLOX_GNSS_ARDUINO_LIBRARY
-#include "ublox_m9n_i2c_module.h"
+#ifndef GNS_LIB_UBLOX_GPS_UBLOX_M9N_I2C_H_
+#include "ublox_m9n_i2c.h"
 #endif
 
 namespace GNS {
