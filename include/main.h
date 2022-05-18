@@ -18,7 +18,7 @@ GNS::App_Settings appSettings = GNS::LoadAppSettings("/config.json");
 #include "wifi_handler.h"
 
 // mDNS
-#include "mDNS_Server.h"
+#include "mdns_server.h"
 
 // Init u-Blox M9N
 #include "ublox_m9n_i2c_module.h"

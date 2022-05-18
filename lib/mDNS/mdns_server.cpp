@@ -1,5 +1,5 @@
 #ifndef GNS_LIB_MDNS_MDNS_SERVER_H_
-#include "mDNS_Server.h"
+#include "mdns_server.h"
 #endif
 
 bool GNS::StartMdnsService(const char* hostname, const char* host_description, const char* service_type, const char* proto, uint16_t port) {
