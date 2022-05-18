@@ -38,6 +38,7 @@ namespace GNS {
     public:
         bool Init();
         void SaveEpochToRtc();
+        static void TimeUpdate(void* args);
     private:
 
     };

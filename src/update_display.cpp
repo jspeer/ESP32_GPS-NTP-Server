@@ -1,7 +1,7 @@
 #include <time.h>
 
-#ifndef GNS_INCLUDE_DISPLAY_UPDATE_TIMER_H_
-#include "display_update_timer.h"
+#ifndef GNS_INCLUDE_UPDATE_DISPLAY_H_
+#include "update_display.h"
 #endif
 
 #ifndef GNS_LIB_WIFI_WIFI_HANDLER_H_

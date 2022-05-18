@@ -27,11 +27,12 @@ void GNS::StartTimers(void* args) {
     ESP_ERROR_CHECK(esp_timer_start_periodic(displayUpdateTimerHandle, 1000000));
 
 /************************************************************************************
- * Start GpsUpdate() timer with an interval of 60 seconds                           *
+ * Start gps update with an interval of 60 seconds (defined in ublox_m9n_i2c.h)     *
  ************************************************************************************/
     // Create the timer arguments
     const esp_timer_create_args_t gpsUpdateTimerArgs = {
-        .callback   = &GNS::GpsUpdate,
+        // .callback   = &GNS::GpsUpdate,
+        .callback   = &GNS::UBLOX::TimeUpdate,
         .arg        = static_cast<void*>(startTimersArgs->gps),
         .name       = "GPS Update"
     };

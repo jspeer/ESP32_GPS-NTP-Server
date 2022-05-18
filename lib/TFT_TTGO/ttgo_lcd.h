@@ -2,12 +2,10 @@
 
 #ifndef GNS_LIB_TFT_TTGO_TTGO_H_
 #define GNS_LIB_TFT_TTGO_TTGO_H_
+
 // Include TFT library
-#ifndef __TFT_ESPI
 #include <TFT_eSPI.h>                              // display driver - install within IDE
 #define TFT_BACKLIGHT_GPIO 4
-#define __TFT_ESPI
-#endif
 
 #ifndef TFT_DISPOFF
 #define TFT_DISPOFF 0x28

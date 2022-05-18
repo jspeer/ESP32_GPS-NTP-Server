@@ -34,3 +34,9 @@ void GNS::UBLOX::SaveEpochToRtc() {
     const timespec res = { .tv_sec = (time_t)epoch, .tv_nsec = (long)epoch_us };
     clock_settime(CLOCK_REALTIME, &res);
 }
+
+void GNS::UBLOX::TimeUpdate(void* args) {
+    GNS::UBLOX* gps = static_cast<GNS::UBLOX*>(args);
+
+    gps->SaveEpochToRtc();
+}

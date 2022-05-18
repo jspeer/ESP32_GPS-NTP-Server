@@ -2,11 +2,8 @@
 #define GNS_INCLUDE_START_TIMERS_H_
 
 // Include the timers
-#include "gps_timer.h"
-#include "display_update_timer.h"
-
-#ifndef __TFT_ESPI
-#include "ttgo_lcd.h"
+#ifndef GNS_INCLUDE_UPDATE_DISPLAY_H_
+#include "update_display.h"
 #endif
 
 #ifndef GNS_LIB_UBLOX_GPS_UBLOX_M9N_I2C_H_
