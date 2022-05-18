@@ -7,39 +7,40 @@
               https://creativecommons.org/publicdomain/zero/1.0/legalcode
  ************************************************************************************/
 
+#ifdef ARDUINO_ARCH_ESP32
+#include "esp32-hal-log.h"
+#endif
+
 #include "main.h"
 
 void setup() {
     Serial.begin(115200);
     vTaskDelay(500 / portTICK_PERIOD_MS);                                   // Delay so we are sure serial is up
-
-    Serial.printf("%s v%s starting up.\n", TITLE, VERSION);
+    ESP_LOGI("System", "%s v%s starting up.", TITLE, VERSION);
 
     // Draw the base layer of the display
-    Serial.println("Initializing display.");  // display is defined in main.h
+    ESP_LOGI("System", "Initializing display.");
     display->Init(1);                                                       // Initialize the display
     display->DrawBase(TITLE, VERSION);                                      // Draw the base display layer
     display->DrawWifiIcon(false);                                           // Draw WiFi icon on display
 
     // Initialize the GPS unit
-    Serial.print("Initializing GPS.");
+    ESP_LOGI("System", "Initializing GPS.");
     gps->Init();  // gps is defined in main.h
     vTaskDelay(500 / portTICK_PERIOD_MS);                                   // Wait for GPS module to initialize
     while (gps->gnss_is_initialized == false) {
-        Serial.print(".");
         display->DrawNoSyncIcon();
         gps->Init();                                                        // Retry GPS init()
         vTaskDelay(500 / portTICK_PERIOD_MS);
     }
     display->DrawSyncInProgressIcon();                                      // Draw sync icon on display
-    Serial.println();
 
     // Set up Time Zone as defined in main.h
-    Serial.printf("Setting up time zone (%s).\n", appSettings.timezone);
+    ESP_LOGI("System", "Setting TZ environment to %s", appSettings.timezone);
     setenv("TZ", appSettings.timezone, 1); tzset();                         // This is the easiest way to ensure we can use a full TZ string
 
     // Start up the WiFi
-    Serial.println("Initializing and configuring WiFi.");
+    ESP_LOGI("System", "Initializing and configuring WiFi.");
     GNS::StartWiFi(&appSettings);
     String ipaddr = WiFi.localIP().toString();
     display->WriteIPAddr(&ipaddr);
@@ -52,7 +53,7 @@ void setup() {
  * Display updating and GPS reference time obtained using hardware timers           *
  * Using hardware timers instead of FreeRTOS software timers here for simplicity    *
  ************************************************************************************/
-    Serial.println("Starting timers.");
+    ESP_LOGI("GNS", "Starting timers.");
     // Set up the arguments for StartTimers()
     GNS::Start_Timers_Args* startTimersArgs = new GNS::Start_Timers_Args {
         .display = display,
@@ -71,17 +72,16 @@ void setup() {
     // Start the one shot event
     ESP_ERROR_CHECK(esp_timer_start_once(startTimersTimerHandle, 0));
 /********************************* End of one-shot timer ****************************/
-
-    Serial.println("Obtaining first time stamp from GPS.");
+    ESP_LOGI("GPS", "Obtaining first time stamp.");
     gps->SaveEpochToRtc();            // gps defined in main.h
     display->DrawSyncIcon(gps->siv);  // display is defined in main.h
 
-    Serial.println("Starting up NTP server.");
+    ESP_LOGI("System", "Starting up NTP server.");
     ntpServer.StartUDPListener();     // ntp server is defined in main.h
     xTaskCreate(GNS::NTPServer::WaitForNTPPacket, "NTP Server", 5000, &ntpServer, 1, NULL);
 
     // Delete "setup and loop" tasks
-    Serial.println("Terminating main thread, relying on spawned threads now.");
+    ESP_LOGI("System", "Terminating main thread.");
     vTaskDelete(NULL);
 }
 

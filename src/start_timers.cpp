@@ -23,7 +23,7 @@ void GNS::StartTimers(void* args) {
     esp_timer_handle_t displayUpdateTimerHandle;
     ESP_ERROR_CHECK(esp_timer_create(&displayUpdateTimerArgs, &displayUpdateTimerHandle));
     // Start the timer, update the screen every second
-    Serial.println("Starting Display Update timer.");
+    ESP_LOGI("Timers", "Starting Display Update timer.");
     ESP_ERROR_CHECK(esp_timer_start_periodic(displayUpdateTimerHandle, 1000000));
 
 /************************************************************************************
@@ -40,6 +40,6 @@ void GNS::StartTimers(void* args) {
     esp_timer_handle_t gpsUpdateTimerHandle;
     ESP_ERROR_CHECK(esp_timer_create(&gpsUpdateTimerArgs, &gpsUpdateTimerHandle));
     // Start the timer, update the RTC every minute
-    Serial.println("Starting GPS Update timer.");
+    ESP_LOGI("Timers", "Starting GPS Update timer.");
     ESP_ERROR_CHECK(esp_timer_start_periodic(gpsUpdateTimerHandle, 60000000));
 }

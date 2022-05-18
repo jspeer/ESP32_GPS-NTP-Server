@@ -16,17 +16,17 @@ void GNS::NTPServer::GetRealtime() {
 
 // Start UDP listener on port (defined in constructor)
 void GNS::NTPServer::StartUDPListener() {
-    Serial.printf("Starting NTP UDP listener on 0.0.0.0:%i.\n", this->port);
+    ESP_LOGI("UDP", "Starting UDP listener on 0.0.0.0:%i", this->port);
     uint8_t err = this->UDP.begin(NTP_PORT);
     if (err == 0) {
-        Serial.println("Failed to start NTP UDP listener. Shutting down.");
+        ESP_LOGE("UDP", "Failed to start UDP listener. Entering deep sleep.");
         esp_deep_sleep_start();
     }
 }
 
 // Terminate UDP listener
 void GNS::NTPServer::StopUDPListener() {
-    Serial.println("Terminating NTP UDP listener.");
+    ESP_LOGI("UDP", "Terminating NTP UDP listener.");
     this->UDP.stop();
 }
 
@@ -36,9 +36,8 @@ void GNS::NTPServer::WaitForNTPPacket(void* args) {
 
     for (;;) {  // Infinite loop
         if (ntpServer->UDP.parsePacket()) {  // Packet was found in UDP queue
-            Serial.println("Got UDP packet. Grabbing timestamp.");
+            ESP_LOGI("UDP", "Got UDP packet. Spawning NTP reply thread.");
             ntpServer->GetRealtime();
-            Serial.println("Spawning reply thread.");
             xTaskCreate(GNS::NTPServer::SendNTPReply, "Send NTP Reply", 5000, ntpServer, 1, NULL);  // Spawn task to reply to this packet
         }
 
@@ -50,25 +49,26 @@ void GNS::NTPServer::WaitForNTPPacket(void* args) {
 void GNS::NTPServer::SendNTPReply(void* args) {
     GNS::NTPServer* ntpServer = static_cast<GNS::NTPServer*>(args);
 
+    ESP_LOGI("NTP-S", "Collecting RX timestamp.");
     // Set the timestamp for the RX packet
     uint32_t rxTm_s = (uint32_t)ntpServer->timestamp.tv_sec;
     uint32_t rxTm_f = (uint32_t)ntpServer->timestamp.tv_nsec;
 
     // Create the client packet
+    ESP_LOGI("NTP-C", "Reading client packet");
     GNS::NTP_Packet clientPacket;
     memset(&clientPacket, 0, sizeof(GNS::NTP_Packet));
 
+    // Read the RX packet
+    ntpServer->UDP.read(((char*) &clientPacket), NTP_PACKET_SIZE);
+
     // Get the remote address information
-    Serial.println("Getting remote connection information.");
+    ESP_LOGI("NTP-C", "Getting remote address and port.");
     IPAddress remoteIP = ntpServer->UDP.remoteIP();
     int remotePort = ntpServer->UDP.remotePort();
 
-    // Read the RX packet
-    Serial.println("Reading client packet.");
-    ntpServer->UDP.read(((char*) &clientPacket), NTP_PACKET_SIZE);
-
     // Create and zero out the reply packet.
-    Serial.println("Starting reply packet.");
+    ESP_LOGI("NTP-R", "Starting reply packet.");
     GNS::NTP_Packet replyPacket;
     memset(&replyPacket, 0, sizeof(GNS::NTP_Packet));
 
@@ -92,33 +92,33 @@ void GNS::NTPServer::SendNTPReply(void* args) {
     replyPacket.refId           = __bswap_32(0x47505300);  // "GPS\0" in hex
 
     // Assign the receive time in the reply packet
-    Serial.println("Assigning RX time.");
+    ESP_LOGI("NTP-R", "Assigning RX timestamp.");
     replyPacket.rxTm_s          = __bswap_32(rxTm_s + EPOCH_NTP64_OFFSET);
     replyPacket.rxTm_f          = __bswap_32(rxTm_f);
 
     // Assign the source tx time to the originating time in the reply packet
-    Serial.println("Assigning client TX time.");
+    ESP_LOGI("NTP-R", "Assigning client TX timestamp.");
     replyPacket.origTm_s        = clientPacket.txTm_s;
     replyPacket.origTm_f        = clientPacket.txTm_f;
 
     // Assign the reference timestamp in the reply packet
-    Serial.println("Assigning GPS reference time.");
+    ESP_LOGI("NTP-R", "Assigning GPS reference timestamp.");
     replyPacket.refTm_s = __bswap_32(ntpServer->gps->epoch + EPOCH_NTP64_OFFSET);  // Apply epoch ntp64 offset
     replyPacket.refTm_f = __bswap_32((uint32_t)ntpServer->gps->epoch_ns);
 
     // Assign the tx timestamp in the reply packet
-    Serial.println("Assigning TX realtime.");
+    ESP_LOGI("NTP-R", "Assigning TX timestamp.");
     ntpServer->GetRealtime();
     replyPacket.txTm_s = __bswap_32((uint32_t)ntpServer->timestamp.tv_sec + EPOCH_NTP64_OFFSET);  // Apply epoch ntp64 offset
     replyPacket.txTm_f = __bswap_32((uint32_t)ntpServer->timestamp.tv_nsec);
 
     // Send the TX packet
-    Serial.println("Sending the reply packet.");
+    ESP_LOGI("NTP-S", "Sending the reply packet");
     ntpServer->UDP.beginPacket(remoteIP, remotePort);
     ntpServer->UDP.write((uint8_t*) &replyPacket, sizeof(replyPacket));
     ntpServer->UDP.endPacket();
 
     // Destroy the task
-    Serial.println("Terminating reply thread.");
+    ESP_LOGI("UDP", "Terminating reply thread.");
     vTaskDelete(NULL);
 }

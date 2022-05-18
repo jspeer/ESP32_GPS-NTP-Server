@@ -24,9 +24,3 @@ Legal
 
     Released under CC0 1.0 Universal
     https://creativecommons.org/publicdomain/zero/1.0/legalcode
-
-TODO
-
-    Remove debugging output to serial.....eventually.
-    Improve comments throughout to ensure reader understands what I wrote... including
-    future me.

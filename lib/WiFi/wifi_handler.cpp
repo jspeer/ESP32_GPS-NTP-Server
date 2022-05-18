@@ -13,22 +13,20 @@ void GNS::StartWiFi(GNS::App_Settings* appSettings) {
             appSettings->networkSettings.dns1,
             appSettings->networkSettings.dns2
         ) == false) {
-                Serial.println("WiFi configuration failed. Shutting down.");
+                ESP_LOGE("WiFi", "Wireless configuration failed. Entering deep sleep.");
                 esp_deep_sleep_start();
         }
     }
     if (appSettings->wifiSettings.ssid == NULL) {
-        Serial.println("No SSID set in config.json. Shutting down.");
+        ESP_LOGE("WiFi", "No SSID set in config.json. Entering deep sleep.");
         esp_deep_sleep_start();
     }
 
-    Serial.printf("Connecting to %s", appSettings->wifiSettings.ssid);
+    ESP_LOGI("WiFi", "Connecting to %s", appSettings->wifiSettings.ssid);
     WiFi.begin(appSettings->wifiSettings.ssid, appSettings->wifiSettings.password); // Tell wifi to start connecting
     while (WiFi.status() != WL_CONNECTED) {                                 // Wait for connection
-        Serial.print(".");
         vTaskDelay(500 / portTICK_PERIOD_MS);
     }
-    Serial.println("connected.");
 
     // Start the wifi watchdog task
     xTaskCreate(GNS::WiFiWatchdog, "Reconnect to WiFi", 5000, nullptr, 1, NULL);
@@ -47,13 +45,10 @@ void GNS::WiFiWatchdog(void* args) {
 
 // WiFi reconnection task
 void GNS::WiFiReconnectTask(void* args) {
-    Serial.print("Reconnecting to WiFi");
+    ESP_LOGI("WiFi", "Reconnecting to WiFi");
     WiFi.reconnect();
-    while (WiFi.status() != WL_CONNECTED) {
-        Serial.print(".");
+    while (WiFi.status() != WL_CONNECTED)
         vTaskDelay(500 / portTICK_PERIOD_MS);
-    }
-    Serial.println("connected.");
 
     vTaskDelete(NULL);
 }

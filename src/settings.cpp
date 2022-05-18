@@ -52,14 +52,14 @@ GNS::App_Settings GNS::LoadAppSettings(const char* inifile) {
                 if (jsonConfig["gps"]["i2c_sda_pin"]) appSettings.gpsSettings.sda_pin = jsonConfig["gps"]["i2c_sda_pin"];
                 if (jsonConfig["gps"]["i2c_scl_pin"]) appSettings.gpsSettings.scl_pin = jsonConfig["gps"]["i2c_scl_pin"];
             } else {
-                Serial.println("Failed to deserialize JSON.");
-                Serial.printf("%i: %s\n", err.code(), err.c_str());
+                ESP_LOGI("Settings", "Failed to deserialize JSON.");
+                ESP_LOGI("Settings", "%i: %s", err.code(), err.c_str());
             }
         } else {
-            Serial.println("Failed to open the file for read.");
+            ESP_LOGI("Settings", "Failed to open the file for read.");
         }
     } else {
-        Serial.println("LittleFS couldn't start");
+        ESP_LOGI("Settings", "LittleFS couldn't start.");
     }
 
     return appSettings;
