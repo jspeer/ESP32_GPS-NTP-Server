@@ -4,6 +4,7 @@
 #define GNS_LIB_MDNS_MDNS_SERVER_H_
 
 #include <mdns.h>
+#include <NetBIOS.h>
 
 #ifdef ARDUINO_ARCH_ESP32
 #ifndef __ARDUHAL_LOG_H__
