@@ -4,7 +4,6 @@
 #define GNS_LIB_WIFI_WIFI_HANDLER_H_
 
 #include <WiFi.h>
-#include "ttgo_lcd.h"
 #include "../../include/settings.h"
 
 namespace GNS {

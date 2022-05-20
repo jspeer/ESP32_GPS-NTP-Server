@@ -2,6 +2,9 @@
 #include "settings.h"
 #endif
 
+#include <FS.h>
+#include <LittleFS.h>
+
 #include <arpa/inet.h>
 #include <ArduinoJson.h>
 

@@ -3,9 +3,7 @@
 #ifndef GNS_INCLUDE_SETTINGS_H_
 #define GNS_INCLUDE_SETTINGS_H_
 
-#include "IPAddress.h"
-#include "FS.h"
-#include "LittleFS.h"
+#include <IPAddress.h>
 
 namespace GNS {
     typedef struct App_Settings {
