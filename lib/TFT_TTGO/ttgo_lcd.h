@@ -56,9 +56,9 @@ namespace GNS {
         int bgColor = TFT_BLACK;
         int borderColor = TFT_WHITE;
         int fillColor = TFT_BLUE;
-        int fontColor = TFT_WHITE;
+        int fontColor = TFT_YELLOW;
         int fontTimeFg = TFT_CYAN;
-        int fontColorInverse = TFT_BLACK;
+        int fontColorBars = TFT_YELLOW;
         int fontColorOk = TFT_GREEN;
         int fontColorWarn = TFT_YELLOW;
         int fontColorError = TFT_RED;
@@ -94,6 +94,7 @@ namespace GNS {
         void DrawNoSyncIcon();
         static void DisplayUpdateTimeDate(void* args);
     private:
+        static tm GetTimeinfo();
     };
 }
 

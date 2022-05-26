@@ -8,7 +8,7 @@
 void GNS::TTGO::Init(int rotation) {
     ESP_LOGI("TTGO", "Initializing TFT screen.");
     this->display->init();
-    this->display->writecommand(ST7735_INVON);  // fix for inverted colors
+    this->display->writecommand(ST7735_INVON);        // fix for inverted colors
     this->display->setRotation(rotation);
     this->ClearScreen();
 
@@ -18,20 +18,20 @@ void GNS::TTGO::Init(int rotation) {
 
 void GNS::TTGO::Sleep() {
     ESP_LOGI("TTGO", "Sleeping the TFT screen.");
-    if (!this->tft_is_initialized) init();        // Called out of order, init the screen
+    if (!this->tft_is_initialized) init();            // Called out of order, init the screen
 
-    digitalWrite(TFT_BACKLIGHT_GPIO, LOW);  // Turn off the backlight
+    digitalWrite(TFT_BACKLIGHT_GPIO, LOW);            // Turn off the backlight
     this->display->writecommand(ST7789_DISPOFF);      // Turn off the display
     this->display->writecommand(ST7789_SLPIN);        // Enable sleep mode
 }
 
 void GNS::TTGO::Wake() {
     ESP_LOGI("TTGO", "Waking the TFT screen.");
-    if (!this->tft_is_initialized) init();        // Called out of order, init the screen
+    if (!this->tft_is_initialized) init();            // Called out of order, init the screen
 
     this->display->writecommand(ST7789_SLPOUT);       // Disable sleep mode
     this->display->writecommand(ST7789_DISPON);       // Turn on the display
-    digitalWrite(TFT_BACKLIGHT_GPIO, HIGH); // Turn on the backlight
+    digitalWrite(TFT_BACKLIGHT_GPIO, HIGH);           // Turn on the backlight
 }
 
 void GNS::TTGO::ClearScreen() {
@@ -41,24 +41,25 @@ void GNS::TTGO::ClearScreen() {
 void GNS::TTGO::DrawBase(char const* title, char const* version) {
     int sizeX = this->screenX - (this->borderWidth*2);
     int sizeY = this->screenY - (this->borderWidth*2);
+
+    // Draw base screen, titlebar/footer and border
     this->display->fillScreen(this->bgColor);
     this->DrawTitlebar(title);
     this->DrawFooterBar();
     this->display->drawRoundRect(this->borderWidth, this->borderWidth, sizeX, sizeY, this->radiusSize, this->borderColor);
 
-    this->display->setTextColor(this->fontTimeFg, this->bgColor);
-    this->display->drawString("00:00:00", 12, 30, 6);
+    // Display initial time
+    tm timeinfo = GNS::TTGO::GetTimeinfo();
+    this->DisplayTime(&timeinfo);
 
-    this->display->setTextColor(this->fontColorOk, this->bgColor);
-    this->display->drawString(_tzname[_daylight], 206, 29, 2);  // these are from time.h
-
+    // Display version
     this->WriteVersion(version);
 }
 
 void GNS::TTGO::DrawTitlebar(char const* title) {
     int sizeX = this->screenX - (this->borderWidth*2);
     this->display->fillRoundRect(this->borderWidth, this->borderWidth, sizeX, 20, this->radiusSize, this->fillColor);
-    this->display->setTextColor(this->fontColorWarn, this->fillColor);
+    this->display->setTextColor(this->fontColorBars, this->fillColor);
     this->display->drawCentreString(title, this->screenX / 2, 5, this->fontSizeNormal);
 }
 
@@ -90,7 +91,7 @@ void GNS::TTGO::DrawNoSyncIcon() {
     int posY = 4;
     int sizeX = 16;
     int sizeY = 16;
-    this->display->drawRect(posX, posY+2, sizeX, sizeY, this->fillColor);
+    this->display->drawRect(posX, posY+2, sizeX, sizeY, this->fillColor);  // Draw box to make sure to overwrite the old icon
     this->display->drawBitmap(posX, posY, nocon_icon16x16, sizeX, sizeY, this->fontColorError, this->fillColor);
 }
 
@@ -99,8 +100,8 @@ void GNS::TTGO::DrawSyncInProgressIcon() {
     int posY = 4;
     int sizeX = 16;
     int sizeY = 16;
-    this->display->drawRect(posX, posY+2, sizeX, sizeY, this->fillColor);
-    this->display->drawBitmap(posX, posY, warning_icon16x16, sizeX, sizeY, this->fontColorWarn, this->fillColor);
+    this->display->drawRect(posX, posY+2, sizeX, sizeY, this->fillColor);  // Draw box to make sure to overwrite the old icon
+    this->display->drawBitmap(posX, posY, warning_icon16x16, sizeX, sizeY, this->fontColorError, this->fillColor);
 }
 
 void GNS::TTGO::DrawSyncIcon(int level) {
@@ -109,22 +110,22 @@ void GNS::TTGO::DrawSyncIcon(int level) {
     int sizeX = 16;
     int sizeY = 16;
     this->display->drawRect(posX, posY+2, sizeX, sizeY, this->fillColor);
-    switch (level) {
+    switch (level) {                                  // Icons below are from include/iot_iconset_16x16/iot_iconset_16x16.h
         case 0:
             this->DrawSyncInProgressIcon();
             break;
         case 1:
-            this->display->drawBitmap(posX, posY, signal1_icon16x16, sizeX, sizeY, this->fontColorOk, this->fillColor);;
+            this->display->drawBitmap(posX, posY, signal1_icon16x16, sizeX, sizeY, this->fontColorError, this->fillColor);
             break;
         case 2:
-            this->display->drawBitmap(posX, posY, signal2_icon16x16, sizeX, sizeY, this->fontColorOk, this->fillColor);;
+            this->display->drawBitmap(posX, posY, signal2_icon16x16, sizeX, sizeY, this->fontColorWarn,  this->fillColor);
             break;
         case 3:
-            this->display->drawBitmap(posX, posY, signal3_icon16x16, sizeX, sizeY, this->fontColorWarn, this->fillColor);;
+            this->display->drawBitmap(posX, posY, signal3_icon16x16, sizeX, sizeY, this->fontColorWarn,  this->fillColor);
             break;
         case 4:
         default:
-            this->display->drawBitmap(posX, posY, signal4_icon16x16, sizeX, sizeY, this->fontColorWarn, this->fillColor);;
+            this->display->drawBitmap(posX, posY, signal4_icon16x16, sizeX, sizeY, this->fontColorOk,    this->fillColor);
             break;
     }
 }
@@ -135,8 +136,8 @@ void GNS::TTGO::WriteIPAddr(String* ipaddr) {
     int posX = zeroX - 7;
     int posY = zeroY + 1;
 
-    this->display->setTextColor(this->fontColorWarn, this->fillColor);
-    this->display->drawRightString("               ", posX, posY, this->fontSizeNormal);
+    this->display->setTextColor(this->fontColorBars, this->fillColor);
+    this->display->drawRightString("               ", posX, posY, this->fontSizeNormal);  // Overwrite any existing string
     this->display->drawRightString(ipaddr->c_str(), posX, posY, this->fontSizeNormal);
 }
 
@@ -148,7 +149,7 @@ void GNS::TTGO::WriteVersion(char const* version) {
     char versionString[100];
     strcpy(versionString, "FW: v");
     strcat(versionString, version);
-    this->display->setTextColor(this->fontColorWarn, this->fillColor);
+    this->display->setTextColor(this->fontColorBars, this->fillColor);
     this->display->drawString(versionString, posX, posY, this->fontSizeNormal);
 }
 
@@ -156,20 +157,20 @@ void GNS::TTGO::DisplayTime(tm* timeinfo) {
     char buffer[80];
 
     strftime(buffer, 80, "%T", timeinfo);
-    this->display->setTextColor(fontColorWarn, bgColor);
+    this->display->setTextColor(this->fontTimeFg, this->bgColor);
     this->display->drawString(buffer, 12, 30, 6);
 
     // If the day of the year has changed, update the date string
     if (this->dayOfTheYear != timeinfo->tm_yday) {
         this->dayOfTheYear = timeinfo->tm_yday;
         strftime(buffer, 80, "%a %b %e, %Y", timeinfo);
-        this->display->setTextColor(this->fontColorWarn, this->bgColor);
+        this->display->setTextColor(this->fontColor, this->bgColor);
         this->display->drawRect(this->borderWidth+1, 80, this->screenX - (this->borderWidth*2) - 2, this->display->fontHeight(4), this->bgColor);
         this->display->drawCentreString(buffer, ((screenX - (borderWidth*2))/2), 80, 4);
     }
 
-    this->display->setTextColor(this->fontColorOk, this->bgColor);
-    this->display->drawString(_tzname[_daylight], 206, 29, 2);  // these are from time.h
+    this->display->setTextColor(this->fontColor, this->bgColor);
+    this->display->drawString(_tzname[_daylight], 206, 29, 2);  // these magic strings (_tzname & _daylight) are from time.h
 }
 
 void GNS::TTGO::DisplayUpdateTimeDate(void* args) {
@@ -187,10 +188,15 @@ void GNS::TTGO::DisplayUpdateTimeDate(void* args) {
     }
 
     // Update display time
+    tm timeinfo = GNS::TTGO::GetTimeinfo();
+    displayUpdateArgs->display->DisplayTime(&timeinfo);
+}
+
+tm GNS::TTGO::GetTimeinfo() {
     time_t now;
     tm timeinfo;
     time(&now);
     localtime_r(&now, &timeinfo);
 
-    displayUpdateArgs->display->DisplayTime(&timeinfo);
+    return timeinfo;
 }
