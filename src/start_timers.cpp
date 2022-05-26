@@ -27,7 +27,7 @@ void GNS::StartTimers(void* args) {
     ESP_ERROR_CHECK(esp_timer_start_periodic(displayUpdateTimerHandle, 1000000));
 
 /************************************************************************************
- * Start gps update with an interval of 60 seconds (defined in ublox_m9n_i2c.h)     *
+ * Start gps update with an interval of 10 seconds (defined in ublox_m9n_i2c.h)     *
  ************************************************************************************/
     // Create the timer arguments
     const esp_timer_create_args_t gpsUpdateTimerArgs = {
@@ -40,5 +40,5 @@ void GNS::StartTimers(void* args) {
     ESP_ERROR_CHECK(esp_timer_create(&gpsUpdateTimerArgs, &gpsUpdateTimerHandle));
     // Start the timer, update the RTC every minute
     ESP_LOGI("Timers", "Starting GPS Update timer.");
-    ESP_ERROR_CHECK(esp_timer_start_periodic(gpsUpdateTimerHandle, 60000000));
+    ESP_ERROR_CHECK(esp_timer_start_periodic(gpsUpdateTimerHandle, 10000000));
 }
