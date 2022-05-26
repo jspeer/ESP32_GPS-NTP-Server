@@ -3,12 +3,15 @@
 #ifndef GNS_INCLUDE_MAIN_H_
 #define GNS_INCLUDE_MAIN_H_
 
+#define TITLE "GPS NTP"  // shown at top of display
+
 // System Includes
 #include <Arduino.h>
 #include <esp_timer.h>
 #include <byteswap.h>
 #include <time.h>
 
+// Debug logging
 #ifdef ARDUINO_ARCH_ESP32
 #ifndef __ARDUHAL_LOG_H__
 #include <esp32-hal-log.h>
@@ -20,7 +23,7 @@
 #include "settings.h"
 GNS::App_Settings appSettings = GNS::LoadAppSettings("/config.json");
 
-// #include <WiFi.h>
+// WiFi Handler
 #include "wifi_handler.h"
 
 // mDNS
@@ -34,14 +37,11 @@ GNS::UBLOX* gps = new GNS::UBLOX(appSettings.gpsSettings.sda_pin, appSettings.gp
 #include "ttgo_lcd.h"
 GNS::TTGO* display = new GNS::TTGO;
 
-// Include the timers
-#include "start_timers.h"
-
-// Include the NTP server
+// Init the NTP server
 #include "ntp_server.h"
 GNS::NTPServer ntpServer = GNS::NTPServer(gps);
 
-// ============ GLOBAL VARIABLES ===================================================
-#define TITLE "GPS NTP"  // shown at top of display
+// Include the timers
+#include "start_timers.h"
 
 #endif  // GNS_INCLUDE_MAIN_H_

@@ -42,7 +42,7 @@ namespace GNS {
     };
 
     typedef struct NTP_Packet {
-        uint8_t li_vn_mode;      // Eight bits. li, vn, and mode.
+        uint8_t li_vn_mode;     // Eight bits. li, vn, and mode.
                                 // li.   Two bits.   Leap indicator.
                                 // vn.   Three bits. Version number of the protocol.
                                 // mode. Three bits. Client will pick mode 3 for client.
