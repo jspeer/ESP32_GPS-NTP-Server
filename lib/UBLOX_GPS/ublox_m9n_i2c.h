@@ -31,7 +31,6 @@ namespace GNS {
     // Class methods
     public:
         UBLOX_M9N_I2C(int sda, int scl);
-    private:
         ~UBLOX_M9N_I2C() = default;
 
     // Custom methods
