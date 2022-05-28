@@ -3,7 +3,7 @@
 #endif
 
 // Constructor with initialization list
-GNS::NTPServer::NTPServer(GNS::UBLOX* ublox) : port{NTP_PORT}, gps{ublox} { }  // NTP_PORT is defined in ntp_server.h
+GNS::NTPServer::NTPServer(GNS::GPS* gps) : port{NTP_PORT}, gps{gps} { }  // NTP_PORT is defined in ntp_server.h
 
 GNS::NTPServer::~NTPServer() {
     StopUDPListener();

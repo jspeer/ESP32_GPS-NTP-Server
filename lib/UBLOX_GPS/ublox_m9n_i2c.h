@@ -3,6 +3,10 @@
 #ifndef GNS_LIB_UBLOX_GPS_UBLOX_M9N_I2C_H_
 #define GNS_LIB_UBLOX_GPS_UBLOX_M9N_I2C_H_
 
+#ifndef GNS_LIB_GPS_GPS_H_
+#include "gps.h"
+#endif
+
 // Include UBLOX GPS library
 #ifndef SPARKFUN_UBLOX_ARDUINO_LIBRARY_H
 #include <Wire.h>
@@ -17,27 +21,23 @@
 
 namespace GNS {
 
-    class UBLOX {
+    class UBLOX_M9N_I2C : public GPS {
     // Members
     public:
-        bool gnss_is_initialized = false; // module initialized
-        int32_t  epoch_ns    = 0;     // epoch nanoseconds
-        uint32_t epoch_us    = 0;     // epoch microseconds
-        uint32_t epoch       = 0;     // epoch seconds
-        uint8_t  siv         = 0;     // satellites in view
 
     private:
         SFE_UBLOX_GNSS* receiver = new SFE_UBLOX_GNSS;
 
     // Class methods
     public:
-        UBLOX(int sda, int scl);
-        ~UBLOX() = default;
+        UBLOX_M9N_I2C(int sda, int scl);
+    private:
+        ~UBLOX_M9N_I2C() = default;
 
     // Custom methods
     public:
         bool Init();
-        void SaveEpochToRtc();
+        void GetEpoch();
         static void TimeUpdate(void* args);
     private:
 

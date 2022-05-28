@@ -44,7 +44,7 @@ namespace GNS {
 
     // Default methods
     public:
-        NTPServer(GNS::UBLOX* gps);
+        NTPServer(GNS::GPS* gps);
         ~NTPServer();
 
     // public members
@@ -52,7 +52,7 @@ namespace GNS {
         WiFiUDP UDP;
         timespec timestamp;
         uint16_t port;
-        GNS::UBLOX* gps;
+        GNS::GPS* gps;
 
     // private members
     private:

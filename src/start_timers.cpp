@@ -31,7 +31,7 @@ void GNS::StartTimers(void* args) {
  ************************************************************************************/
     // Create the timer arguments
     const esp_timer_create_args_t gpsUpdateTimerArgs = {
-        .callback   = &GNS::UBLOX::TimeUpdate,
+        .callback   = &GNS::GPS::TimeUpdate,
         .arg        = static_cast<void*>(startTimersArgs->gps),
         .name       = "GPS Update"
     };

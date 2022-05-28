@@ -29,7 +29,7 @@ namespace GNS {
     // Public structs
     public:
         typedef struct Display_Update_Args {
-            GNS::UBLOX* gps;
+            GNS::GPS* gps;
             GNS::TTGO* display;
         } display_update_args_t;
 

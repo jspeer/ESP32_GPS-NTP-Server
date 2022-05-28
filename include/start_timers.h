@@ -13,7 +13,7 @@
 namespace GNS {
     typedef struct Start_Timers_Args {
         GNS::TTGO* display;
-        GNS::UBLOX* gps;
+        GNS::GPS* gps;
     } start_timers_args_t;
     void StartTimers(void* args);
 }
