@@ -21,8 +21,6 @@ namespace GNS {
         uint32_t epoch_us = 0;  // epoch microseconds
         uint32_t epoch    = 0;  // epoch seconds
         uint8_t  siv      = 0;  // satellites in view
-    private:
-        static GPS* gps;
 
     // custom pure virtual methods
     public:
