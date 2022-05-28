@@ -16,11 +16,11 @@ bool GNS::StartMDNSService(const char* hostname, const char* host_description, c
         ESP_LOGI("mDNS", "Adding service %s %s/%i", service_type, proto, port);
         mdns_service_add(NULL, service_type, proto, port, NULL, 0);          // Add the NTP service to mDNS
 
-        // Start NetBIOS resolver
+        // Start NetBIOS resolver -- because Windows
         char nbnshostname[100];
         strcpy(nbnshostname, hostname);
-        strcat(nbnshostname, ".local");
-        ESP_LOGI("mDNS", "Starting NetBIOS Name Service for %s", nbnshostname);
+        strcat(nbnshostname, ".local");  // Adding TLD of .local to match mDNS
+        ESP_LOGI("NetBIOS", "Starting NetBIOS Name Service for %s", nbnshostname);
         NBNS.begin(nbnshostname);
 
         return true;

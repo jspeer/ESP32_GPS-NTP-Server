@@ -6,7 +6,9 @@
 #include <WiFiUdp.h>
 #include <time.h>
 
-#include "ublox_m9n_i2c.h"
+#ifndef GNS_LIB_UBLOX_GPS_UBLOX_GNSS_H_
+#include "ublox_gnss.h"
+#endif
 
 #define NTP_PORT 123
 #define NTP_PACKET_SIZE 48

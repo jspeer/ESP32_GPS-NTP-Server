@@ -9,8 +9,8 @@
 
 #include <WiFi.h>
 
-#ifndef GNS_LIB_UBLOX_GPS_UBLOX_M9N_I2C_H_
-#include "ublox_m9n_i2c.h"
+#ifndef GNS_LIB_UBLOX_GPS_UBLOX_GNSS_H_
+#include "ublox_gnss.h"
 #endif
 
 #ifndef TFT_DISPOFF
@@ -93,6 +93,8 @@ namespace GNS {
         void DisplayTime(tm* timeinfo);
         void DrawNoSyncIcon();
         static void DisplayUpdateTimeDate(void* args);
+
+    // Misc methods
     private:
         static tm GetTimeinfo();
     };

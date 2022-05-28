@@ -6,8 +6,8 @@
 #include "ttgo_lcd.h"
 #endif
 
-#ifndef GNS_LIB_UBLOX_GPS_UBLOX_M9N_I2C_H_
-#include "ublox_m9n_i2c.h"
+#ifndef GNS_LIB_UBLOX_GPS_UBLOX_GNSS_H_
+#include "ublox_gnss.h"
 #endif
 
 namespace GNS {

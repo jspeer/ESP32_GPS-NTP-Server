@@ -30,8 +30,8 @@ GNS::App_Settings appSettings = GNS::LoadAppSettings("/config.json");
 #include "mdns_server.h"
 
 // Init u-Blox M9N
-#include "ublox_m9n_i2c.h"
-GNS::GPS* gps = new GNS::UBLOX_M9N_I2C(appSettings.gpsSettings.sda_pin, appSettings.gpsSettings.scl_pin);
+#include "ublox_gnss.h"
+GNS::GPS* gps = new GNS::UBLOX_GNSS(appSettings.gpsSettings.sda_pin, appSettings.gpsSettings.scl_pin);
 
 // Init TFT
 #include "ttgo_lcd.h"

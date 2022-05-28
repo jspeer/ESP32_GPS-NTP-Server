@@ -6,7 +6,7 @@ void GNS::GPS::SaveEpochToRtc() {
     this->GetEpoch();
 
     // Use time.h clock_settime() for high resolution timestamp
-    ESP_LOGI("RTC", "Setting RTC to GPS time.");
+    ESP_LOGI("GPS", "Saving GPS time to RTC.");
     const timespec res = { .tv_sec = (time_t)this->epoch, .tv_nsec = (long)this->epoch_us };
     clock_settime(CLOCK_REALTIME, &res);
 }

@@ -10,14 +10,14 @@
 
 #define FORMAT_LITTLEFS_IF_FAILED false
 
-GNS::App_Settings GNS::LoadAppSettings(const char* inifile) {
+GNS::App_Settings GNS::LoadAppSettings(const char* jsonfile) {
     GNS::App_Settings appSettings;
 
     DynamicJsonDocument doc(1024);
     ESP_LOGI("Settings", "Starting LittleFS");
     if (LittleFS.begin(FORMAT_LITTLEFS_IF_FAILED)) {
         ESP_LOGI("Settings", "Reading /config.json from LittleFS.");
-        if (File fp = LittleFS.open(inifile, "r", false)) {
+        if (File fp = LittleFS.open(jsonfile, "r", false)) {
             // Read the contents of the file
             char buf[fp.size()];
             fp.readBytes(buf, fp.size());

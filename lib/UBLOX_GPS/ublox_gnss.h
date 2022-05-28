@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef GNS_LIB_UBLOX_GPS_UBLOX_M9N_I2C_H_
-#define GNS_LIB_UBLOX_GPS_UBLOX_M9N_I2C_H_
+#ifndef GNS_LIB_UBLOX_GPS_UBLOX_GNSS_H_
+#define GNS_LIB_UBLOX_GPS_UBLOX_GNSS_H_
 
 #ifndef GNS_LIB_GPS_GPS_H_
 #include "gps.h"
@@ -21,7 +21,7 @@
 
 namespace GNS {
 
-    class UBLOX_M9N_I2C : public GPS {
+    class UBLOX_GNSS : public GPS {
     // Members
     public:
 
@@ -30,8 +30,8 @@ namespace GNS {
 
     // Class methods
     public:
-        UBLOX_M9N_I2C(int sda, int scl);
-        ~UBLOX_M9N_I2C() = default;
+        UBLOX_GNSS(int sda, int scl);
+        ~UBLOX_GNSS() = default;
 
     // Custom methods
     public:
@@ -42,4 +42,4 @@ namespace GNS {
     };
 }
 
-#endif  // GNS_LIB_UBLOX_GPS_UBLOX_M9N_I2C_H_
+#endif  // GNS_LIB_UBLOX_GPS_UBLOX_GNSS_H_

@@ -44,7 +44,7 @@ namespace GNS {
         GPS_Settings gpsSettings;
     } app_settings_t;
 
-    App_Settings LoadAppSettings(const char* inifile);
+    App_Settings LoadAppSettings(const char* jsonfile);
 }
 
 #endif  // GNS_INCLUDE_SETTINGS_H_
