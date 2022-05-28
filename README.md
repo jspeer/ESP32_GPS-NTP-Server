@@ -14,9 +14,11 @@ Description: An ESP32 based NTP server with time synchronized by GPS
     See /data/config.json (default is pins 21/22).
 
     To replace uBlox with another sensor, replace lib/UBLOX_GPS (see current implementation)
-    and update include/main.h to reflect new constructor.
+    and update platformio.ini and include/main.h to reflect new library and constructor.
 
     IoT_16x16_icon_set_oled_2_color from engsta.net (no copyright noted)
+
+    To use a different display or ESP32 board, review platformio.ini and include/main.h
 
 Config:      Configuration is stored in /data/config.json
 
