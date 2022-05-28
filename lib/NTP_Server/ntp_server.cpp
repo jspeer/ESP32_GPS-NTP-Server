@@ -57,8 +57,8 @@ void GNS::NTPServer::SendNTPReply(void* args) {
 
     // Create the client packet
     ESP_LOGI("NTP-C", "Reading client packet");
-    GNS::NTP_Packet clientPacket;
-    memset(&clientPacket, 0, sizeof(GNS::NTP_Packet));
+    GNS::NTPServer::NTP_Packet clientPacket;
+    memset(&clientPacket, 0, sizeof(GNS::NTPServer::NTP_Packet));
 
     // Read the RX packet
     ntpServer->UDP.read(((char*) &clientPacket), NTP_PACKET_SIZE);
@@ -70,8 +70,8 @@ void GNS::NTPServer::SendNTPReply(void* args) {
 
     // Create and zero out the reply packet.
     ESP_LOGI("NTP-R", "Starting reply packet.");
-    GNS::NTP_Packet replyPacket;
-    memset(&replyPacket, 0, sizeof(GNS::NTP_Packet));
+    GNS::NTPServer::NTP_Packet replyPacket;
+    memset(&replyPacket, 0, sizeof(GNS::NTPServer::NTP_Packet));
 
     // Set the first bytes bits to 00,011,100 for li = 0, vn = 3, and mode = 4. The rest will be left set to zero.
     *((char*) &replyPacket + 0) = 0b00011100;
