@@ -38,7 +38,6 @@ namespace GNS {
     public:
         bool Init();
         void GetEpoch();
-        static void TimeUpdate(void* args);
     private:
 
     };
