@@ -49,7 +49,7 @@ void GNS::TTGO::DrawBase(char const* title, char const* version) {
     this->display->drawRoundRect(this->borderWidth, this->borderWidth, sizeX, sizeY, this->radiusSize, this->borderColor);
 
     // Display initial time
-    tm timeinfo = GNS::TTGO::GetTimeinfo();
+    tm timeinfo = GNS::Time::GetTimeinfo();
     this->DisplayTime(&timeinfo);
 
     // Display version
@@ -188,15 +188,6 @@ void GNS::TTGO::DisplayUpdateTimeDate(void* args) {
     }
 
     // Update display time
-    tm timeinfo = GNS::TTGO::GetTimeinfo();
+    tm timeinfo = GNS::Time::GetTimeinfo();
     displayUpdateArgs->display->DisplayTime(&timeinfo);
-}
-
-tm GNS::TTGO::GetTimeinfo() {
-    time_t now;
-    tm timeinfo;
-    time(&now);
-    localtime_r(&now, &timeinfo);
-
-    return timeinfo;
 }

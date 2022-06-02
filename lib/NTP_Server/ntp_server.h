@@ -10,6 +10,10 @@
 #include "ublox_gnss.h"
 #endif
 
+#ifndef GNS_LIB_TIME_GNS_TIME_H_
+#include "gns_time.h"
+#endif
+
 #define NTP_PORT 123
 #define NTP_PACKET_SIZE 48
 #define EPOCH_NTP64_OFFSET 2208988800   // Difference from NTP64 to EPOCH (Jan 1 1900 to Jan 1 1970)
@@ -65,10 +69,6 @@ namespace GNS {
         static void WaitForNTPPacket(void* args);
         void StartUDPListener();
         void StopUDPListener();
-
-    // private methods
-    private:
-        void GetRealtime();
     };
 }
 

@@ -9,25 +9,19 @@ GNS::NTPServer::~NTPServer() {
     StopUDPListener();
 }
 
-// Grab the RTC time stamp and apply it to the object timestamp
-void GNS::NTPServer::GetRealtime() {
-    ESP_LOGI("RTC", "Getting time from RTC.");
-    clock_gettime(CLOCK_REALTIME, &this->timestamp);
-}
-
 // Start UDP listener on port (defined in constructor)
 void GNS::NTPServer::StartUDPListener() {
-    ESP_LOGI("UDP", "Starting UDP listener on 0.0.0.0:%i", this->port);
+    ESP_LOGI("NTP Server", "Starting UDP listener on 0.0.0.0:%i", this->port);
     uint8_t err = this->UDP.begin(NTP_PORT);
     if (err == 0) {
-        ESP_LOGE("UDP", "Failed to start UDP listener. Entering deep sleep.");
+        ESP_LOGE("NTP Server", "Failed to start UDP listener. Entering deep sleep.");
         esp_deep_sleep_start();
     }
 }
 
 // Terminate UDP listener
 void GNS::NTPServer::StopUDPListener() {
-    ESP_LOGI("UDP", "Terminating NTP UDP listener.");
+    ESP_LOGI("NTP Server", "Terminating NTP UDP listener.");
     this->UDP.stop();
 }
 
@@ -37,8 +31,8 @@ void GNS::NTPServer::WaitForNTPPacket(void* args) {
 
     for (;;) {  // Infinite loop
         if (ntpServer->UDP.parsePacket()) {  // Packet was found in UDP queue
-            ESP_LOGI("UDP", "Got UDP packet. Spawning NTP reply thread.");
-            ntpServer->GetRealtime();
+            ESP_LOGI("NTP Server", "Got UDP packet. Spawning NTP reply thread.");
+            ntpServer->timestamp = GNS::Time::GetRealtime();
             xTaskCreate(GNS::NTPServer::SendNTPReply, "Send NTP Reply", 5000, ntpServer, 1, NULL);  // Spawn task to reply to this packet
         }
 
@@ -50,13 +44,13 @@ void GNS::NTPServer::WaitForNTPPacket(void* args) {
 void GNS::NTPServer::SendNTPReply(void* args) {
     GNS::NTPServer* ntpServer = static_cast<GNS::NTPServer*>(args);
 
-    ESP_LOGI("NTP-S", "Collecting RX timestamp.");
+    ESP_LOGI("NTP Server", "Collecting RX timestamp.");
     // Set the timestamp for the RX packet
     uint32_t rxTm_s = (uint32_t)ntpServer->timestamp.tv_sec;
     uint32_t rxTm_f = (uint32_t)ntpServer->timestamp.tv_nsec;
 
     // Create the client packet
-    ESP_LOGI("NTP-C", "Reading client packet");
+    ESP_LOGI("NTP Server", "Reading client packet");
     GNS::NTPServer::NTP_Packet clientPacket;
     memset(&clientPacket, 0, sizeof(GNS::NTPServer::NTP_Packet));
 
@@ -64,12 +58,12 @@ void GNS::NTPServer::SendNTPReply(void* args) {
     ntpServer->UDP.read(((char*) &clientPacket), NTP_PACKET_SIZE);
 
     // Get the remote address information
-    ESP_LOGI("NTP-C", "Getting remote address and port.");
+    ESP_LOGI("NTP Server", "Getting remote address and port.");
     IPAddress remoteIP = ntpServer->UDP.remoteIP();
     int remotePort = ntpServer->UDP.remotePort();
 
     // Create and zero out the reply packet.
-    ESP_LOGI("NTP-R", "Starting reply packet.");
+    ESP_LOGI("NTP Reply", "Starting reply packet.");
     GNS::NTPServer::NTP_Packet replyPacket;
     memset(&replyPacket, 0, sizeof(GNS::NTPServer::NTP_Packet));
 
@@ -93,28 +87,28 @@ void GNS::NTPServer::SendNTPReply(void* args) {
     replyPacket.refId           = __bswap_32(0x47505300);  // "GPS\0" in hex
 
     // Assign the receive time in the reply packet
-    ESP_LOGI("NTP-R", "Assigning RX timestamp.");
+    ESP_LOGI("NTP Reply", "Assigning RX timestamp.");
     replyPacket.rxTm_s          = __bswap_32(rxTm_s + EPOCH_NTP64_OFFSET);
     replyPacket.rxTm_f          = __bswap_32(rxTm_f);
 
     // Assign the source tx time to the originating time in the reply packet
-    ESP_LOGI("NTP-R", "Assigning client TX timestamp.");
+    ESP_LOGI("NTP Reply", "Assigning client TX timestamp.");
     replyPacket.origTm_s        = clientPacket.txTm_s;
     replyPacket.origTm_f        = clientPacket.txTm_f;
 
     // Assign the reference timestamp in the reply packet
-    ESP_LOGI("NTP-R", "Assigning GPS reference timestamp.");
+    ESP_LOGI("NTP Reply", "Assigning GPS reference timestamp.");
     replyPacket.refTm_s = __bswap_32(ntpServer->gps->epoch + EPOCH_NTP64_OFFSET);  // Apply epoch ntp64 offset
     replyPacket.refTm_f = __bswap_32((uint32_t)ntpServer->gps->epoch_ns);
 
     // Assign the tx timestamp in the reply packet
-    ESP_LOGI("NTP-R", "Assigning TX timestamp.");
-    ntpServer->GetRealtime();
+    ESP_LOGI("NTP Reply", "Assigning TX timestamp.");
+    ntpServer->timestamp = GNS::Time::GetRealtime();
     replyPacket.txTm_s = __bswap_32((uint32_t)ntpServer->timestamp.tv_sec + EPOCH_NTP64_OFFSET);  // Apply epoch ntp64 offset
     replyPacket.txTm_f = __bswap_32((uint32_t)ntpServer->timestamp.tv_nsec);
 
     // Send the TX packet
-    ESP_LOGI("NTP-S", "Sending the reply packet");
+    ESP_LOGI("NTP Server", "Sending the reply packet");
     ntpServer->UDP.beginPacket(remoteIP, remotePort);
     ntpServer->UDP.write((uint8_t*) &replyPacket, sizeof(replyPacket));
     ntpServer->UDP.endPacket();

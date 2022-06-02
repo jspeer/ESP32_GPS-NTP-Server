@@ -20,7 +20,7 @@ bool GNS::StartMDNSService(const char* hostname, const char* host_description, c
         char nbnshostname[100];
         strcpy(nbnshostname, hostname);
         strcat(nbnshostname, ".local");  // Adding TLD of .local to match mDNS
-        ESP_LOGI("NetBIOS", "Starting NetBIOS Name Service for %s", nbnshostname);
+        ESP_LOGI("mDNS", "Starting NetBIOS Name Service for %s", nbnshostname);
         NBNS.begin(nbnshostname);
 
         return true;

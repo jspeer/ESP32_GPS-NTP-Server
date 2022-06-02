@@ -6,7 +6,7 @@
 
 // Set up i2c wires
 GNS::UBLOX_GNSS::UBLOX_GNSS(int sda, int scl) {
-    ESP_LOGI("GPS", "Setting up pins and starting i2c.");
+    ESP_LOGI("UBLOX", "Setting up pins and starting i2c.");
     Wire.setPins(sda, scl);
     Wire.begin();
 }
@@ -15,7 +15,7 @@ GNS::UBLOX_GNSS::UBLOX_GNSS(int sda, int scl) {
 bool GNS::UBLOX_GNSS::Init() {
     if (!this->gnss_is_initialized) {
         if (this->receiver->begin() == true) {
-            ESP_LOGI("GPS", "GPS initialized, setting parameters");
+            ESP_LOGI("UBLOX", "GPS initialized, setting parameters");
             this->receiver->setI2COutput(COM_TYPE_UBX);
             this->receiver->setMeasurementRate(UBLOX_RECEIVER_MEASUREMENT_RATE);
             this->receiver->setNavigationFrequency(UBLOX_RECEIVER_NAVIGATION_RATE);
@@ -28,7 +28,7 @@ bool GNS::UBLOX_GNSS::Init() {
 // Obtain and save the epoch time to ESP RTC from the receiver
 void GNS::UBLOX_GNSS::GetEpoch() {
     // Get the packet from the receiver
-    ESP_LOGI("GPS", "Obtaining UBXNAVPVT packet from receiver");
+    ESP_LOGI("UBLOX", "Obtaining UBXNAVPVT packet from receiver");
     this->epoch = this->receiver->getUnixEpoch(this->epoch_us);           // Call receiver->getUnixEpoch(), which in turn should call receiver->getPVT() if the data is stale
     this->epoch_ns = this->receiver->packetUBXNAVPVT->data.nano;    // Grab the nano seconds from the current receiver packet
     this->siv = this->receiver->packetUBXNAVPVT->data.numSV;  // Get the SIV from the current receiver packet

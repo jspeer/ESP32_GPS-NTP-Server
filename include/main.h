@@ -23,6 +23,9 @@
 #include "settings.h"
 GNS::App_Settings appSettings = GNS::LoadAppSettings("/config.json");
 
+// Time functions
+#include "gns_time.h"
+
 // WiFi Handler
 #include "wifi_handler.h"
 

@@ -13,6 +13,10 @@
 #include "ublox_gnss.h"
 #endif
 
+#ifndef GNS_LIB_TIME_GNS_TIME_H_
+#include "gns_time.h"
+#endif
+
 #ifndef TFT_DISPOFF
 #define TFT_DISPOFF 0x28
 #endif
@@ -93,10 +97,6 @@ namespace GNS {
         void DisplayTime(tm* timeinfo);
         void DrawNoSyncIcon();
         static void DisplayUpdateTimeDate(void* args);
-
-    // Misc methods
-    private:
-        static tm GetTimeinfo();
     };
 }
 
