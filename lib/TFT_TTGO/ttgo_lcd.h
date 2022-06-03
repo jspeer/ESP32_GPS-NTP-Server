@@ -4,7 +4,7 @@
 #define GNS_LIB_TFT_TTGO_TTGO_H_
 
 // Include TFT library
-#include <TFT_eSPI.h>                              // display driver - install within IDE
+#include <TFT_eSPI.h>
 #define TFT_BACKLIGHT_GPIO 4
 
 #include <WiFi.h>

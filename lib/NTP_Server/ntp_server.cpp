@@ -32,7 +32,7 @@ void GNS::NTPServer::WaitForNTPPacket(void* args) {
     for (;;) {  // Infinite loop
         if (ntpServer->UDP.parsePacket()) {  // Packet was found in UDP queue
             ESP_LOGI("NTP Server", "Got UDP packet. Spawning NTP reply thread.");
-            ntpServer->timestamp = GNS::Time::GetRealtime();
+            ntpServer->timestamp = GNS::Time::GetRealtime();  // Timestamp used for RX time
             xTaskCreate(GNS::NTPServer::SendNTPReply, "Send NTP Reply", 5000, ntpServer, 1, NULL);  // Spawn task to reply to this packet
         }
 

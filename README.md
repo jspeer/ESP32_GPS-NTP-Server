@@ -16,7 +16,7 @@ Description: An ESP32 based NTP server with time synchronized by GPS
     To replace uBlox with another sensor, replace lib/UBLOX_GPS (see current implementation)
     and update platformio.ini and include/main.h to reflect new library and constructor.
 
-    IoT_16x16_icon_set_oled_2_color from engsta.net (no copyright noted)
+    IoT_iconset_16x16 from engsta.net (no copyright noted)
 
     To use a different display or ESP32 board, review platformio.ini and include/main.h
 

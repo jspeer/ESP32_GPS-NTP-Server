@@ -25,11 +25,11 @@ bool GNS::UBLOX_GNSS::Init() {
     return this->gnss_is_initialized;
 }
 
-// Obtain and save the epoch time to ESP RTC from the receiver
+// Obtain Epoch time and SIV from receiver
 void GNS::UBLOX_GNSS::GetEpoch() {
     // Get the packet from the receiver
     ESP_LOGI("UBLOX", "Obtaining UBXNAVPVT packet from receiver");
-    this->epoch = this->receiver->getUnixEpoch(this->epoch_us);           // Call receiver->getUnixEpoch(), which in turn should call receiver->getPVT() if the data is stale
+    this->epoch = this->receiver->getUnixEpoch(this->epoch_us);     // Call receiver->getUnixEpoch(), which in turn should call receiver->getPVT() if the data is stale
     this->epoch_ns = this->receiver->packetUBXNAVPVT->data.nano;    // Grab the nano seconds from the current receiver packet
-    this->siv = this->receiver->packetUBXNAVPVT->data.numSV;  // Get the SIV from the current receiver packet
+    this->siv = this->receiver->packetUBXNAVPVT->data.numSV;        // Get the SIV (Satellites in View) from the current receiver packet
 }

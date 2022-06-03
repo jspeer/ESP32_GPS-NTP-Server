@@ -38,7 +38,7 @@ void GNS::StartTimers(void* args) {
     // Create the timer
     esp_timer_handle_t gpsUpdateTimerHandle;
     ESP_ERROR_CHECK(esp_timer_create(&gpsUpdateTimerArgs, &gpsUpdateTimerHandle));
-    // Start the timer, update the RTC every minute
+    // Start the timer, update the RTC every 10 seconds
     ESP_LOGI("Timers", "Starting GPS Update timer.");
     ESP_ERROR_CHECK(esp_timer_start_periodic(gpsUpdateTimerHandle, 10000000));
 }

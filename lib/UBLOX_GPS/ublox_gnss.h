@@ -10,7 +10,7 @@
 // Include UBLOX GPS library
 #ifndef SPARKFUN_UBLOX_ARDUINO_LIBRARY_H
 #include <Wire.h>
-#include <SparkFun_u-blox_GNSS_Arduino_Library.h> //http://librarymanager/All#SparkFun_u-blox_GNSS
+#include <SparkFun_u-blox_GNSS_Arduino_Library.h>
 #define UBLOX_RECEIVER_MEASUREMENT_RATE (uint16_t)  10  // in ms
 #define UBLOX_RECEIVER_NAVIGATION_RATE  (uint8_t)   10  // in Hz
 #endif
