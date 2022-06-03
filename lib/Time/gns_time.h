@@ -9,6 +9,7 @@
 namespace GNS {
     class Time {
     public:
+        static void SetTimezone(const char* timezone);
         static tm GetTimeinfo();
         static timespec GetRealtime();
         static void SaveRealtime(const timespec* realtime);

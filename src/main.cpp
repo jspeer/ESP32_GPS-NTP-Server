@@ -29,9 +29,8 @@ void setup() {
     }
     display->DrawSyncInProgressIcon();                                      // Draw sync icon on display
 
-    // Set up Time Zone as defined in main.h
-    ESP_LOGI("System", "Setting TZ environment to %s", appSettings.timezone);
-    setenv("TZ", appSettings.timezone, 1); tzset();                         // This is the easiest way to ensure we can use a full TZ string
+    // Set up Time Zone as defined in config.json
+    GNS::Time::SetTimezone(appSettings.timezone);
 
     // Start up the WiFi
     ESP_LOGI("System", "Initializing and configuring WiFi.");
@@ -41,14 +40,20 @@ void setup() {
 
     // Start mDNS
     ESP_LOGI("System", "Starting mDNS Service.");
-    GNS::StartMDNSService(appSettings.mDNSSettings.hostname, appSettings.mDNSSettings.host_description, appSettings.mDNSSettings.service_type, appSettings.mDNSSettings.proto, appSettings.mDNSSettings.port);
+    GNS::StartMDNSService(
+        appSettings.mDNSSettings.hostname,
+        appSettings.mDNSSettings.host_description,
+        appSettings.mDNSSettings.service_type,
+        appSettings.mDNSSettings.proto,
+        appSettings.mDNSSettings.port
+    );
 
 /************************************************************************************
  * Start one shot hw timer which spawns other hardware timers (see start_timers.h)  *
  * Display updating and GPS reference time obtained using hardware timers           *
  * Using hardware timers instead of FreeRTOS software timers here for simplicity    *
  ************************************************************************************/
-    ESP_LOGI("GNS", "Starting timers.");
+    ESP_LOGI("System", "Starting timers.");
     // Set up the arguments for StartTimers()
     GNS::Start_Timers_Args* startTimersArgs = new GNS::Start_Timers_Args {
         .display = display,
@@ -67,7 +72,7 @@ void setup() {
     // Start the one shot event
     ESP_ERROR_CHECK(esp_timer_start_once(startTimersTimerHandle, 0));
 /********************************* End of one-shot timer ****************************/
-    ESP_LOGI("GPS", "Obtaining first time stamp.");
+    ESP_LOGI("System", "Obtaining first time stamp.");
     GNS::GPS::TimeUpdate(gps);        // gps defined in main.h
     display->DrawSyncIcon(gps->siv);  // display is defined in main.h
 
