@@ -6,6 +6,10 @@
 #include <Arduino.h>
 #include <time.h>
 
+#ifndef GNS_LIB_TIME_GNS_TIME_H_
+#include "gns_time.h"
+#endif
+
 namespace GNS {
     class GPS {
     // class methods
@@ -29,7 +33,6 @@ namespace GNS {
 
     // Custom methods
     public:
-        void SaveEpochToRtc();
         static void TimeUpdate(void* args);
     };
 }

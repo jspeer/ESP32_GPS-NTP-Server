@@ -19,3 +19,7 @@ timespec GNS::Time::GetRealtime() {
     ESP_LOGI("Time", "Obtaining high resolution timestamp.");
     return realtime;
 }
+
+void GNS::Time::SaveRealtime(const timespec* realtime) {
+    clock_settime(CLOCK_REALTIME, realtime);
+}

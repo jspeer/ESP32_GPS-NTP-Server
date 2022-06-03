@@ -2,7 +2,8 @@
 #include "ttgo_lcd.h"
 #endif
 
-#include "time.h"
+#include <time.h>  // used for magic strings _tzname & _daylight
+
 #include "../../include/iot_iconset_16x16/iot_iconset_16x16.h"
 
 void GNS::TTGO::Init(int rotation) {

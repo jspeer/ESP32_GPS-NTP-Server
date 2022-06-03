@@ -11,6 +11,7 @@ namespace GNS {
     public:
         static tm GetTimeinfo();
         static timespec GetRealtime();
+        static void SaveRealtime(const timespec* realtime);
     };
 }
 

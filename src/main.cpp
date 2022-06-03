@@ -68,7 +68,7 @@ void setup() {
     ESP_ERROR_CHECK(esp_timer_start_once(startTimersTimerHandle, 0));
 /********************************* End of one-shot timer ****************************/
     ESP_LOGI("GPS", "Obtaining first time stamp.");
-    gps->SaveEpochToRtc();            // gps defined in main.h
+    GNS::GPS::TimeUpdate(gps);        // gps defined in main.h
     display->DrawSyncIcon(gps->siv);  // display is defined in main.h
 
     ESP_LOGI("System", "Starting up NTP server.");
