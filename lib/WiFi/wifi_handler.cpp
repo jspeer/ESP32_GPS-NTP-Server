@@ -30,26 +30,19 @@ void GNS::StartWiFi(GNS::App_Settings* appSettings) {
     }
 
     // Start the wifi watchdog task
-    xTaskCreate(GNS::WiFiWatchdog, "Reconnect to WiFi", 5000, nullptr, 1, NULL);
+    xTaskCreatePinnedToCore(GNS::WiFiWatchdog, "Reconnect to WiFi", 5000, nullptr, 1, NULL, 0);  // Pin to core 0, usually used for system/wifi/bluetooth
 }
 
 // WiFi watchdog task, used to automatically reconnect to wifi if it gets disconnected
 void GNS::WiFiWatchdog(void* args) {
     for (;;) {
         if (WiFi.status() != WL_CONNECTED) {
-            xTaskCreatePinnedToCore(GNS::WiFiReconnectTask, "Reconnect to WiFi", 5000, nullptr, 1, NULL, 0);  // Pin to core 0, usually used for system/wifi/bluetooth
+            ESP_LOGI("WiFi", "Reconnecting to WiFi");
+            WiFi.reconnect();
+            while (WiFi.status() != WL_CONNECTED)
+                vTaskDelay(500 / portTICK_PERIOD_MS);
         }
 
         vTaskDelay(5 / portTICK_RATE_MS * 1000);  // delay 5 seconds before checking again
     }
-}
-
-// WiFi reconnection task
-void GNS::WiFiReconnectTask(void* args) {
-    ESP_LOGI("WiFi", "Reconnecting to WiFi");
-    WiFi.reconnect();
-    while (WiFi.status() != WL_CONNECTED)
-        vTaskDelay(500 / portTICK_PERIOD_MS);
-
-    vTaskDelete(NULL);
 }
