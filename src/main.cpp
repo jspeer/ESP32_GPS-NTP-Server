@@ -1,6 +1,6 @@
 /************************************************************************************
  Title:       ESP32 GPS Based NTP Server
- Author:      Jeremy Speer, jeremy.a.speer@thecodeninja.dev
+ Author:      Jeremy Speer, jeremy.a.speer@psyceum.com
  Date:        May 10, 2022
 
  Legal:       Released under CC0 1.0 Universal

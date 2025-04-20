@@ -1,6 +1,6 @@
 
     Title:       ESP32 GPS Based NTP Server
-    Author:      Jeremy Speer, jeremy.a.speer@thecodeninja.dev
+    Author:      Jeremy Speer, jeremy.a.speer@psyceum.com
     Date:        May 10, 2022
     Hardware:    Lilygo TTGO ESP32 T-Display,
                  u-Blox GNSS Breakout
